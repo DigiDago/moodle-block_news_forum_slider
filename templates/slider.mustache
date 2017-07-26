@@ -1,0 +1,51 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template block_news_slider/slider
+
+    Display news slider
+    
+    News content json template
+     
+    {
+    "news": [
+        {"headline":"Headline 1", "message":"Content 1"},
+        {"headline":"Headline 1", "message":"Content 2"},
+        {"headline":"Headline 1", "content":"Content 3"}
+    ]
+}
+}}
+
+<div class="slider responsive">
+        {{#news}}
+                    <div>
+                        <div style="float: right;">
+                        <strong>{{userdate}}</strong>
+                        </div>
+                    
+                        <h2>{{{headline}}}</h2>
+                        <span><strong>{{{courseshortname}}}</strong>, by {{author}}</span>
+                        <span class="newscontent">{{{message}}}</span>
+                   
+                    </div>
+        {{/news}}
+</div>
+{{#js}}
+require(['block_news_slider/slider'], function(mod) {
+    mod.init();
+});
+{{/js}}
