@@ -22,16 +22,20 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+defined('MOODLE_INTERNAL') || die;
+
 /**
- * Form for editing news_slider instances.
+ * News Slider edit form implementation class.
  *
- * @package   block_news_slider
+ * @package block_news_slider
  * @copyright 2017 Manoj Solanki (Coventry University)
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class block_news_slider_edit_form extends block_edit_form {
 
     /**
+     * Override specific definition to provide news slider instance settings.
+     *
      * @param MoodleQuickForm $mform
      */
     protected function specific_definition($mform) {

@@ -14,6 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Version details
+ *
+ * @package   block_news_slider
+ * @copyright 2017 Manoj Solanki (Coventry University)
+ * @copyright
+ * @copyright
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ */
+
 defined('MOODLE_INTERNAL') || die();
 
 $capabilities = array(

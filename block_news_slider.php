@@ -14,11 +14,33 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Version details
+ *
+ * @package block_news_slider
+ * @copyright 2017 Manoj Solanki (Coventry University)
+ * @copyright
+ * @copyright
+ *
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ */
+
+defined('MOODLE_INTERNAL') || die;
+
 require_once($CFG->dirroot . '/user/profile/lib.php');
 require_once($CFG->dirroot . '/user/lib.php');
 require_once($CFG->libdir . '/externallib.php');
 require_once(dirname(__FILE__) . '/lib.php');
 
+
+/**
+ * News Slider block implementation class.
+ *
+ * @package block_news_slider
+ * @copyright 2017 Manoj Solanki (Coventry University)
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class block_news_slider extends block_base {
 
     /** @var int Display Mode all news */
@@ -28,18 +50,16 @@ class block_news_slider extends block_base {
     /** @var int Display Mode Course news only */
     const DISPLAY_MODE_COURSE_NEWS = 3;
 
+    /**
+     * Adds title to block instance.
+     */
     public function init() {
         $this->title = get_string('blocktitle', 'block_news_slider');
     }
 
-    public function has_config() {
-        return true;
-    }
-
-    public function hide_header() {
-        return true;
-    }
-
+    /**
+     * Calls functions to load js and css and returns block instance content.
+     */
     public function get_content() {
         global $COURSE, $USER, $OUTPUT, $PAGE;
 
@@ -56,12 +76,10 @@ class block_news_slider extends block_base {
         }
 
         $newsblock = $this->get_courses_news();
-        
+
         $newscontentjson = new stdClass();
         $newscontentjson->news = array_values($newsblock);
-        
-        // print_r ($newscontentjson);
-        
+
         $PAGE->requires->css('/blocks/news_slider/slick/slick.css');
         $PAGE->requires->css('/blocks/news_slider/slick/slick-theme.css');
 
@@ -74,6 +92,9 @@ class block_news_slider extends block_base {
         return $this->content;
     }
 
+    /**
+     * Gets course news for relevant courses.
+     */
     private function get_courses_news() {
         global $COURSE, $USER, $OUTPUT, $CFG;
 
@@ -90,14 +111,14 @@ class block_news_slider extends block_base {
             }
         }
 
-        // Check what type of news to display from config.
+        // Check what type of news to display from config.  This variable is unused at present.
         if (!empty($this->config->displaymode)) {
-            $newsType = $this->config->displaymode;
+            $newstype = $this->config->displaymode;
         } else {
-            $newsType = $this::DISPLAY_MODE_ALL_NEWS;
+            $newstype = $this::DISPLAY_MODE_ALL_NEWS;
         }
-        
-        // echo "Display type is " . $newsType . '<br>';
+
+        // DEBUG line: echo "Display type is " . $newstype . '<br>';.
 
         // Extract any assignments that are due and any news items.
         $assignments = array();
@@ -107,9 +128,9 @@ class block_news_slider extends block_base {
         $coursenews = array();
         $tempnews = array();
         $isteacher = false;
-        
+
         $newscontent = array();
-        
+
         foreach ($allcourses as $course) {
             $tempnews = news_slider_get_course_news($course);
             if (!empty($tempnews)) {
@@ -125,7 +146,7 @@ class block_news_slider extends block_base {
                     } else {
                         $newsmessage = $news['message'];
                     }
-                    
+
                     $coursenews[] = array('headline'  => $headline,
                             'author'          => $news['author'],
                             'courseshortname' => $course->shortname,
@@ -141,5 +162,5 @@ class block_news_slider extends block_base {
         return $coursenews;
 
     }
-    
+
 }

@@ -3,19 +3,16 @@
 
 
 .slick-dots button, .slick-dots button:active {
-	
-	border: none;
-	box-shadow: none;
-	-webkit-box-shadow: none;
+
+    border: none;
+    box-shadow: none;
+    -webkit-box-shadow: none;
 }
 
 .slider h2 {
-	line-height: 0.8em;
-	
+    line-height: 0.8em;
 }
 
 .slider .newscontent p {
-	padding: 10px 0px;
-
+    padding: 10px 0px;
 }
-

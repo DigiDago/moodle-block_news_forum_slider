@@ -14,9 +14,20 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ *
+ * Settings for Block news slider.
+ *
+ * @package   block_news_slider
+ * @copyright 2017 Manoj Solanki (Coventry University)
+ * @copyright
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ */
+
 defined('MOODLE_INTERNAL') || die;
 
-// Colour settings to be added here
+// Colour settings to be added in future versions here.
 
 $settings->add(new admin_setting_configtext('news_slider_excerpt_length',
         get_string('excerptlength', 'block_news_slider'),

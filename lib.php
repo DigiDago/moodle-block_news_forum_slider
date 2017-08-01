@@ -14,17 +14,28 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * News slider block helper functions and callbacks
+ *
+ * @package block_news_slider
+ * @copyright 2017 John Tutchings (Coventry University)
+ * @copyright 2017 Manoj Solanki (Coventry University)
+ * @copyright
+ * @copyright
+ *
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ */
+
+defined('MOODLE_INTERNAL') || die;
+
 define('NEWS_SLIDER_EXCERPT_LENGTH', 750);
 
 /**
- * Get an overview of activity per course for the currecnt user
+ * Get an overview of activity per course for the current user
  *
- * @global type $CFG
- * @global type $USER
- * @global type $DB
- * @global type $OUTPUT
- * @param type $courses array of courses that the user is on
- * @param array $remotecourses
+ * @param  stdClass  $courses          An array of courses that the user is on
+ * @param  array     $remotecourses    An array of remote courses, if any
  * @return array An array of the overview course activity for each course since the users last access
  */
 function news_slider_get_overview($courses, array $remotecourses = array()) {
@@ -82,8 +93,7 @@ function news_slider_get_overview($courses, array $remotecourses = array()) {
 /**
  * Get the news items that need to be displayed
  *
- * @global type $USER
- * @param type $course a course to get the news items from for the current user
+ * @param stdClass $course a course to get the news items from for the current user
  * @return array List of news items to show
  */
 function news_slider_get_course_news($course) {
@@ -127,31 +137,14 @@ function news_slider_get_course_news($course) {
     return $newsitems;
 }
 
-
 /**
- * Get the course summary for a given course.
+ * Truncates the News item so it fits in the news tabs nicely
  *
- * @global type $DB
- * @param type $course The course to ge the summary for.
- * @return string The course summary for the given course.
- */
-function news_slider_get_course_summary($course) {
-    global $DB;
-
-    $rec = $DB->get_record('course', array('id' => $course->id));
-
-    return $rec->summary;
-}
-
-
-/**
- * Truncates the News Item so it fits in the news tabs nicely.
- *
- * @param type $text The news item text.
- * @param type $length The length to trim it down to.
- * @param type $ending What to display at the end of the string if we have trimmed the item.
- * @param type $exact
- * @param type $considerhtml If the html make up tages should be ignored in the lenght to trim the text down to.S
+ * @param stdClass  $text   The news item text.
+ * @param stdClass  $length The length to trim it down to.
+ * @param stdClass  $ending  What to display at the end of the string if we have trimmed the item.
+ * @param stdClass  $exact
+ * @param stdClass  $considerhtml If the html make up tages should be ignored in the lenght to trim the text down to.
  * @return string
  */
 function news_slider_truncate_news($text, $length = 100, $ending = '...', $exact = false, $considerhtml = true) {
