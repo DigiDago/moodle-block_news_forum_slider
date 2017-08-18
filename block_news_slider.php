@@ -63,6 +63,7 @@ class block_news_slider extends block_base {
     public function get_content() {
         global $COURSE, $USER, $OUTPUT, $PAGE;
 
+        $config = get_config("block_news_slider");
         if ($this->content !== null) {
             return $this->content;
         }
@@ -78,6 +79,8 @@ class block_news_slider extends block_base {
         $newsblock = $this->get_courses_news();
 
         $newscontentjson = new stdClass();
+
+        $newscontentjson->title = $config->bannertitle;
         $newscontentjson->news = array_values($newsblock);
 
         $PAGE->requires->css('/blocks/news_slider/slick/slick.css');
@@ -131,6 +134,9 @@ class block_news_slider extends block_base {
 
         $newscontent = array();
 
+        $config = get_config("block_news_slider");
+        $excerptlength = $config->excerptlength;
+
         foreach ($allcourses as $course) {
             $tempnews = news_slider_get_course_news($course);
             if (!empty($tempnews)) {
@@ -139,10 +145,10 @@ class block_news_slider extends block_base {
                             array('d' => $news['discussion'])), $news['subject']),
                             array('class' => 'news_sliderNewsHeadline'));
 
-                    if (isset($CFG->news_slider_excerpt_length) && ($CFG->news_slider_excerpt_length == 0) ) {
+                    if ( (!empty($excerptlength)) && ($excerptlength == 0) ) {
                         $newsmessage = $news['message'];
-                    } else if (strlen($news['message']) > $CFG->news_slider_excerpt_length) {
-                        $newsmessage = news_slider_truncate_news($news['message'], $CFG->news_slider_excerpt_length);
+                    } else if (strlen($news['message']) > $excerptlength) {
+                        $newsmessage = news_slider_truncate_news($news['message'], $excerptlength);
                     } else {
                         $newsmessage = $news['message'];
                     }
@@ -152,15 +158,36 @@ class block_news_slider extends block_base {
                             'courseshortname' => $course->shortname,
                             'subject'         => $news['subject'],
                             'message'         => $newsmessage,
-                            'userdate'        => date('l d/m/Y', $news['modified'])
+                            'userdayofdate'   => date('l', $news['modified']),
+                            'userdate'        => date('d/m/Y', $news['modified']),
+                            'userid'          => $news['userid'],
+                            'userpicture'     => $news['userpicture'],
+                            'profilelink'     => new moodle_url('/user/view.php', array('id'=>$news['userid'], 'course'=>$course->id))
                     );
                 }
             }
 
         }
-
         return $coursenews;
 
+    }
+
+    /**
+     * Allow the block to have a configuration page
+     *
+     * @return boolean
+     */
+    public function has_config() {
+        return true;
+    }
+
+    /**
+     * Sets block header to be hidden or visible
+     *
+     * @return bool if true then header will be visible.
+     */
+    public function hide_header() {
+        return true;
     }
 
 }

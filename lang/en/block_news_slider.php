@@ -30,9 +30,6 @@ $string['displaymodestringall'] = 'ALL (Site + Course News)';
 $string['displaymodestringsite'] = 'Site news only';
 $string['displaymodestringcourse'] = 'Course news only';
 $string['excerptlength'] = 'Length of excerpt';
-$string['excerptlengthdesc'] = 'Length of excerpt (number of characters)';
-$string['titleheaderallnews'] = 'All News';
-$string['titleheadersitenews'] = 'Site News';
-$string['titleheadercoursenews'] = 'Course News';
-
-
+$string['excerptlengthdesc'] = 'Length of excerpt (number of characters).';
+$string['bannertitle'] = 'News';
+$string['bannertitledesc'] = 'Title that appears to the left of the slider.';

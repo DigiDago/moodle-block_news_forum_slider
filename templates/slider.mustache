@@ -18,9 +18,9 @@
     @template block_news_slider/slider
 
     Display news slider
-    
+
     News content json template
-     
+
     {
     "news": [
         {"headline":"Headline 1", "message":"Content 1"},
@@ -30,19 +30,31 @@
 }
 }}
 
-<div class="slider responsive">
+<div class="content" style="height: 130px;">
+
+    <div class="slider-banner-col" style="height: 100%">
+            <p>{{title}}</p>
+    </div>
+
+    <div class="slider responsive slider-col">
         {{#news}}
-                    <div>
-                        <div style="float: right;">
-                        <strong>{{userdate}}</strong>
-                        </div>
-                    
-                        <h2>{{{headline}}}</h2>
-                        <span><strong>{{{courseshortname}}}</strong>, by {{author}}</span>
-                        <span class="newscontent">{{{message}}}</span>
-                   
-                    </div>
+            <div>
+                <div style="float: right;">
+                    <div class="slider-col-date">{{userdayofdate}}, {{userdate}}</div>
+                    <div class="slider-col-date-minimal">{{userdate}}</div>
+                </div>
+
+                <div style="float: left; padding: 0px 10px 10px 10px; min-height: 100px;">
+                    {{{userpicture}}}
+                </div>
+                <span class="newscontent">
+                    <h2>{{{headline}}}</h2>
+                    <strong>{{{courseshortname}}}</strong>, by {{author}}<br>
+                    {{{message}}}</span>
+            </div>
         {{/news}}
+    </div>
+
 </div>
 {{#js}}
 require(['block_news_slider/slider'], function(mod) {

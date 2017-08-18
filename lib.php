@@ -31,6 +31,11 @@ defined('MOODLE_INTERNAL') || die;
 
 define('NEWS_SLIDER_EXCERPT_LENGTH', 750);
 
+
+$defaultblocksettings = array(
+        'excerptlength' => NEWS_SLIDER_EXCERPT_LENGTH
+);
+
 /**
  * Get an overview of activity per course for the current user
  *
@@ -97,7 +102,7 @@ function news_slider_get_overview($courses, array $remotecourses = array()) {
  * @return array List of news items to show
  */
 function news_slider_get_course_news($course) {
-    global $USER;
+    global $USER, $OUTPUT;
 
     $posttext = '';
 
@@ -121,6 +126,19 @@ function news_slider_get_course_news($course) {
         if (empty($notread[$discussion->discussion])) {
             continue;
         }
+
+        // Get user profile picture.
+
+        // Build an object that represents the posting user.
+        $postuser = new stdClass;
+        $postuserfields = explode(',', user_picture::fields());
+        $postuser = username_load_fields_from_object($postuser, $discussion, null, $postuserfields);
+        $postuser->id = $discussion->userid;
+        $postuser->fullname    = $discussion->firstname . ' ' . $discussion->lastname;
+        $postuser->profilelink = new moodle_url('/user/view.php', array('id' => $discussion->userid, 'course'=>$course->id));
+
+        $userpicture = $OUTPUT->user_picture($postuser, array('courseid'=>$course->id, 'size' => 80));
+
         $newsitems[$discussion->id]['course'] = $course->shortname;
         $newsitems[$discussion->id]['courseid'] = $course->id;
         $newsitems[$discussion->id]['discussion'] = $discussion->discussion;
@@ -129,6 +147,8 @@ function news_slider_get_course_news($course) {
         $newsitems[$discussion->id]['subject'] = $discussion->subject;
         $newsitems[$discussion->id]['message'] = $discussion->message;
         $newsitems[$discussion->id]['userdate'] = userdate($discussion->modified, $strftimerecent);
+        $newsitems[$discussion->id]['userid'] = $discussion->userid;
+        $newsitems[$discussion->id]['userpicture'] = $userpicture;
 
         $posttext .= $discussion->subject;
         $posttext .= userdate($discussion->modified, $strftimerecent);

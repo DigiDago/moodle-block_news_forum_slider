@@ -27,37 +27,55 @@
 
     display: block;
 
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
     padding: 0;
     margin-top: -10px\9; /*lte IE 8*/
-    -webkit-transform: translate(0, -50%);
-    -ms-transform: translate(0, -50%);
-    transform: translate(0, -50%);
 
     cursor: pointer;
 
     color: transparent;
+    border-radius: 50%;
     border: none;
     outline: none;
     background: transparent;
+    z-index: 1000;
+    opacity: 0.75;
 }
+
+
 .slick-prev:hover,
 .slick-prev:focus,
 .slick-next:hover,
 .slick-next:focus
 {
-/*     color: transparent;
-    outline: none;
-    background: transparent; */
+    opacity: 1;
+    -webkit-animation-name: hvr-pop;
+    animation-name: hvr-pop;
+    -webkit-animation-duration: 0.3s;
+    animation-duration: 0.3s;
+    -webkit-animation-timing-function: linear;
+    animation-timing-function: linear;
+    -webkit-animation-iteration-count: 1;
+    animation-iteration-count: 1;
 }
+
 .slick-prev:hover:before,
 .slick-prev:focus:before,
 .slick-next:hover:before,
 .slick-next:focus:before
 {
     opacity: 1;
+    -webkit-animation-name: hvr-pop;
+    animation-name: hvr-pop;
+    -webkit-animation-duration: 0.3s;
+    animation-duration: 0.3s;
+    -webkit-animation-timing-function: linear;
+    animation-timing-function: linear;
+    -webkit-animation-iteration-count: 1;
+    animation-iteration-count: 1;
 }
+
 .slick-prev.slick-disabled:before,
 .slick-next.slick-disabled:before
 {
@@ -71,8 +89,9 @@
     font-size: 20px;
     line-height: 1;
 
-    opacity: .25; /* Originally .75. */
-    color: #AAAAAA;
+    opacity: .20; /* Originally .75. */
+
+    color: #5f5454;
 
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -80,8 +99,9 @@
 
 .slick-prev
 {
-    left: -25px;
+    left: 10px;
 }
+
 [dir='rtl'] .slick-prev
 {
     right: -25px;
@@ -98,7 +118,7 @@
 
 .slick-next
 {
-    right: -25px;
+    right: 10px;
 }
 [dir='rtl'] .slick-next
 {
@@ -123,7 +143,7 @@
 .slick-dots
 {
     position: absolute;
-    bottom: -45px;
+     bottom: -5px;
 
     display: block;
 
@@ -133,7 +153,11 @@
     list-style: none;
 
     text-align: center;
+
+    margin-left: auto;
+    margin-right: auto;
 }
+
 .slick-dots li
 {
     position: relative;
@@ -161,7 +185,9 @@
     cursor: pointer;
 
     color: transparent;
-    border: 0;
+    /* border: 0; */
+    border: none;
+    border-radius: 50%;
     outline: none;
     background: transparent;
 }
@@ -174,11 +200,20 @@
 .slick-dots li button:focus:before
 {
     opacity: 1;
+    -webkit-animation-name: hvr-pop;
+    animation-name: hvr-pop;
+    -webkit-animation-duration: 0.3s;
+    animation-duration: 0.3s;
+    -webkit-animation-timing-function: linear;
+    animation-timing-function: linear;
+    -webkit-animation-iteration-count: 1;
+    animation-iteration-count: 1;
 }
+
 .slick-dots li button:before
 {
     font-family: 'slick';
-    font-size: 6px;
+    font-size: 10px;
     line-height: 20px;
 
     position: absolute;
@@ -197,8 +232,25 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
+
 .slick-dots li.slick-active button:before
 {
     opacity: .75;
     color: black;
+}
+
+
+/* Pop */
+@-webkit-keyframes hvr-pop {
+  50% {
+   -webkit-transform: scale(1.2);
+    transform: scale(1.2);
+   }
+}
+
+@keyframes hvr-pop {
+    50% {
+        -webkit-transform: scale(1.2);
+        transform: scale(1.2);
+    }
 }
