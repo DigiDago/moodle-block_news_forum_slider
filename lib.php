@@ -29,7 +29,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-define('NEWS_SLIDER_EXCERPT_LENGTH', 750);
+define('NEWS_SLIDER_EXCERPT_LENGTH', 200);
 
 
 $defaultblocksettings = array(

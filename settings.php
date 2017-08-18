@@ -28,8 +28,6 @@
 defined('MOODLE_INTERNAL') || die;
 
 if ($ADMIN->fulltree) {
-    /* $settings->add(new admin_setting_configtext('block_course_overview/defaultmaxcourses', new lang_string('defaultmaxcourses', 'block_course_overview'),
-            new lang_string('defaultmaxcoursesdesc', 'block_course_overview'), 10, PARAM_INT)); */
 
     $settings->add(new admin_setting_configtext('block_news_slider/excerptlength',
             get_string('excerptlength', 'block_news_slider'),

@@ -89,8 +89,7 @@ class block_news_slider extends block_base {
         $newscontentfinal = $OUTPUT->render_from_template('block_news_slider/slider', $newscontentjson);
 
         $this->content->text = html_writer::tag('div',
-                $newscontentfinal,
-                array('id' => 'cucourseLayout', 'class' => 'cucourseLayout'));
+                $newscontentfinal);
 
         return $this->content;
     }
@@ -153,11 +152,16 @@ class block_news_slider extends block_base {
                         $newsmessage = $news['message'];
                     }
 
+                    // For small screen displays, prepare a shorter version of news message, regardless
+                    // of excerpt length config.
+                    $shortnewsmessage = news_slider_truncate_news($news['message'], 70);
+
                     $coursenews[] = array('headline'  => $headline,
                             'author'          => $news['author'],
                             'courseshortname' => $course->shortname,
                             'subject'         => $news['subject'],
                             'message'         => $newsmessage,
+                            'shortmessage'    => $shortnewsmessage,
                             'userdayofdate'   => date('l', $news['modified']),
                             'userdate'        => date('d/m/Y', $news['modified']),
                             'userid'          => $news['userid'],

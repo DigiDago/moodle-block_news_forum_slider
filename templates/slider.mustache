@@ -30,7 +30,7 @@
 }
 }}
 
-<div class="content" style="height: 130px;">
+<div style="height: 130px;">
 
     <div class="slider-banner-col" style="height: 100%">
             <p>{{title}}</p>
@@ -50,7 +50,9 @@
                 <span class="newscontent">
                     <h2>{{{headline}}}</h2>
                     <strong>{{{courseshortname}}}</strong>, by {{author}}<br>
-                    {{{message}}}</span>
+                    <span class="message">{{{message}}}</span>
+                    <span class="message-short">{{{shortmessage}}}</span>
+                    </span>
             </div>
         {{/news}}
     </div>
