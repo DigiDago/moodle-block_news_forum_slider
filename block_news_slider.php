@@ -135,37 +135,55 @@ class block_news_slider extends block_base {
 
         $config = get_config("block_news_slider");
         $excerptlength = $config->excerptlength;
+        $subjectmaxlength = $config->subjectmaxlength;
 
         foreach ($allcourses as $course) {
             $tempnews = news_slider_get_course_news($course);
             if (!empty($tempnews)) {
                 foreach ($tempnews as $news) {
+                    $newslink = new moodle_url('/mod/forum/discuss.php', array('d' => $news['discussion']));
+                    // echo $newslink;
+
+                    // Subject.  Trim if longer than $subjectmaxlength.
+                    $subject = $news['subject'];
+
+                    if (strlen($subject) > $subjectmaxlength) {
+                        $subject = preg_replace('/\s+?(\S+)?$/', '', substr($subject, 0, $subjectmaxlength)) . " ... [ Read More ]";
+                    }
+
                     $headline = html_writer::tag('div', html_writer::link(new moodle_url('/mod/forum/discuss.php',
                             array('d' => $news['discussion'])), $news['subject']),
                             array('class' => 'news_sliderNewsHeadline'));
 
+                    /* $headline = html_writer::tag('div', $subject,
+                            array('class' => 'news_sliderNewsHeadline')); */
+
                     if ( (!empty($excerptlength)) && ($excerptlength == 0) ) {
                         $newsmessage = $news['message'];
                     } else if (strlen($news['message']) > $excerptlength) {
-                        $newsmessage = news_slider_truncate_news($news['message'], $excerptlength);
+                        $newsmessage = news_slider_truncate_news($news['message'], $excerptlength, " .. [ Read More ]");
                     } else {
                         $newsmessage = $news['message'];
                     }
 
+                    $newsmessage = '<a href="' . $newslink . '">' . $newsmessage . '</a>';
+
                     // For small screen displays, prepare a shorter version of news message, regardless
                     // of excerpt length config.
-                    $shortnewsmessage = news_slider_truncate_news($news['message'], 70);
+                    $shortnewsexcerptlength = 70;
+                    $shortnewsmessage = news_slider_truncate_news($news['message'], $shortnewsexcerptlength, " .. [ Read More ]");
+                    $shortnewsmessage = '<a href="' . $newslink . '">' . $shortnewsmessage . '</a>';
 
                     $coursenews[] = array('headline'  => $headline,
                             'author'          => $news['author'],
                             'courseshortname' => $course->shortname,
-                            'subject'         => $news['subject'],
                             'message'         => $newsmessage,
                             'shortmessage'    => $shortnewsmessage,
                             'userdayofdate'   => date('l', $news['modified']),
                             'userdate'        => date('d/m/Y', $news['modified']),
                             'userid'          => $news['userid'],
                             'userpicture'     => $news['userpicture'],
+                            'link'            => $newslink,
                             'profilelink'     => new moodle_url('/user/view.php', array('id'=>$news['userid'], 'course'=>$course->id))
                     );
                 }

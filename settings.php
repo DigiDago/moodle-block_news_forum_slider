@@ -33,4 +33,8 @@ if ($ADMIN->fulltree) {
             get_string('excerptlength', 'block_news_slider'),
             get_string('excerptlengthdesc', 'block_news_slider'), NEWS_SLIDER_EXCERPT_LENGTH, PARAM_INT));
 
+    $settings->add(new admin_setting_configtext('block_news_slider/subjectmaxlength',
+            get_string('subjectmaxlength', 'block_news_slider'),
+            get_string('subjectmaxlengthdesc', 'block_news_slider'), NEWS_SLIDER_SUBJECT_MAX_LENGTH, PARAM_INT));
+
 }

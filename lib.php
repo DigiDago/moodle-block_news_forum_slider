@@ -29,11 +29,12 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-define('NEWS_SLIDER_EXCERPT_LENGTH', 200);
-
+define('NEWS_SLIDER_EXCERPT_LENGTH', 160);
+define('NEWS_SLIDER_SUBJECT_MAX_LENGTH', 30);
 
 $defaultblocksettings = array(
-        'excerptlength' => NEWS_SLIDER_EXCERPT_LENGTH
+        'excerptlength' => NEWS_SLIDER_EXCERPT_LENGTH,
+        'subjectmaxlength' => NEWS_SLIDER_SUBJECT_MAX_LENGTH
 );
 
 /**
@@ -246,6 +247,7 @@ function news_slider_truncate_news($text, $length = 100, $ending = '...', $exact
             $truncate = substr($truncate, 0, $spacepos);
         }
     }
+
     // Add the defined ending to the text.
     $truncate .= $ending;
     if ($considerhtml) {

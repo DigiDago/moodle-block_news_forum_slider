@@ -9,24 +9,46 @@
     -webkit-box-shadow: none;
 }
 
-.slider h2, .slider a {
-    line-height: 0.4em;
-    color: #444 !important;
-    font-size: 16px;    
+.slider .newscontent .headline {
+    line-height: normal;
+    font-size: 18px;
     font-weight: bold;
+    padding-bottom: 8px;
 }
 
-.slider h2, .slider a:hover {
+.slider .newscontent .headline a {
+    color: #444 !important;
+}
+
+.slider .newscontent .headline  a:hover,
+.slider .newscontent a:hover {
     color: #06C !important;
-    padding: 5px 0px;
+}
+
+.slider .authorline {
+	font-size: 12px;
 }
 
 .slider .newscontent p {
-	padding: 10px 10px
+	padding: 10px 10px;
 } 
 
+.slider .newscontent a {
+    font-weight: 400;
+    line-height: normal;
+    font-size: 95%;
+    color: #333333 !important;
+}
+
 .slider-banner-col {
+	height: 130px;
     display: none;
+}
+
+.slider-banner-col span {
+    display: inline-block;
+    vertical-align: middle;
+    line-height: normal;
 }
 
 .slider-col {
@@ -70,13 +92,21 @@
 	    background-color: #F15C22;
 	    float: left;
 	    position: relative;
-	    display: block;
+
+		display: -webkit-box;
+		display: -webkit-flex;
+		display: -moz-box;
+		display: -ms-flexbox;
+		display: flex;
+		-webkit-flex-align: center;
+		-ms-flex-align: center;
+		-webkit-align-items: center;
+		align-items: center;
+
 	}
 
-	.slider-banner-col p {
+	.slider-banner-col span {
 	    color: #fff;
-	    position: relative;
-	    top: 30%;
 	    text-decoration: none;
 	    font-size: 20px;
 	    font-weight: 800;
@@ -93,9 +123,13 @@
 		float: left;
 	}
 
-    .slider h2, .slider a {
-	    font-size: 18px;
+    .slider .headline a {
+        font-size: 16px;
     }
+
+    .slider .authorline {
+    font-size: 12px;
+}
 
     .slider-col-date-minimal {
         display: none;
@@ -116,8 +150,13 @@
 }
 
 @media only screen and (min-width: 1280px) {
-	.slider h2, .slider a {
+
+    .slider .headline a {
         font-size: 22px;
+    }
+
+    .slider .authorline {
+        font-size: 14px;
     }
 
     .slider-col-date {
@@ -128,7 +167,7 @@
 }
 
 @media only screen and (min-width: 1440px) {
-    .slider-banner-col p {
+    .slider-banner-col span {
         font-size: 30px;
     }
 
