@@ -2,7 +2,7 @@
 moodle-block_news_slider
 
 ### What is this repository for? ###
-Creates a moodle block that displays in a tabbed format the moodle courses the user is enrolled on.
+Displays a news slider of unread course announcements.
 
 * Version
 
