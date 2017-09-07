@@ -42,6 +42,7 @@ class block_news_slider_edit_form extends block_edit_form {
         global $CFG;
         $mform->addElement('header', 'configheader', get_string('blocksettings', 'block'));
 
+        // Display mode, all news, site news or course news
         $displaymodeoptions = array(
                 block_news_slider::DISPLAY_MODE_ALL_NEWS    => get_string('displaymodestringall', 'block_news_slider'),
                 block_news_slider::DISPLAY_MODE_SITE_NEWS   => get_string('displaymodestringsite', 'block_news_slider'),
@@ -51,6 +52,14 @@ class block_news_slider_edit_form extends block_edit_form {
         $mform->addElement('select', 'config_displaymode', get_string('displaymode', 'block_news_slider'), $displaymodeoptions);
         $mform->setDefault('config_displaymode', block_news_slider::DISPLAY_MODE_ALL_NEWS);
         $mform->setType('config_displaymode', PARAM_INT);
+
+        $mform->addElement('text', 'config_siteitemstoshow', get_string('siteitemstoshow', 'block_news_slider'));
+        $mform->setDefault('config_siteitemstoshow', block_news_slider::NEWS_SLIDER_DEFAULT_SITE_NEWS_ITEMS);
+        $mform->setType('config_siteitemstoshow', PARAM_TEXT);
+
+        $mform->addElement('text', 'config_siteitemsperiod', get_string('siteitemsperiod', 'block_news_slider'));
+        $mform->setDefault('config_siteitemsperiod', block_news_slider::NEWS_SLIDER_DEFAULT_SITE_NEWS_PERIOD);
+        $mform->setType('config_siteitemsperiod', PARAM_TEXT);
 
     }
 }

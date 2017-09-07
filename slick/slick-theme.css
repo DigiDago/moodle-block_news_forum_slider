@@ -171,6 +171,14 @@
 
     cursor: pointer;
 }
+
+
+.slick-dots li button
+{
+    display: none;
+}
+
+@media only screen and (min-width: 481px) {
 .slick-dots li button
 {
     font-size: 0;
@@ -191,6 +199,8 @@
     outline: none;
     background: transparent;
 }
+}
+
 .slick-dots li button:hover,
 .slick-dots li button:focus
 {

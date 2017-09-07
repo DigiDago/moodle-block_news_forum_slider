@@ -33,7 +33,6 @@ require_once($CFG->dirroot . '/user/lib.php');
 require_once($CFG->libdir . '/externallib.php');
 require_once(dirname(__FILE__) . '/lib.php');
 
-
 /**
  * News Slider block implementation class.
  *
@@ -49,6 +48,15 @@ class block_news_slider extends block_base {
     const DISPLAY_MODE_SITE_NEWS = 2;
     /** @var int Display Mode Course news only */
     const DISPLAY_MODE_COURSE_NEWS = 3;
+
+    /** @var int Default site items to show */
+    const NEWS_SLIDER_DEFAULT_SITE_NEWS_ITEMS = 4;
+
+    /** @var int Default site news period to show */
+    const NEWS_SLIDER_DEFAULT_SITE_NEWS_PERIOD = 7; // In days
+
+    /** @var int Default no news display text */
+    const DISPLAY_NO_NEWS_TEXT = "You do not have any unread news posts at the moment";
 
     /**
      * Adds title to block instance.
@@ -96,9 +104,11 @@ class block_news_slider extends block_base {
 
     /**
      * Gets course news for relevant courses.
+     *
+     * @return array An array of news posts
      */
     private function get_courses_news() {
-        global $COURSE, $USER, $OUTPUT, $CFG;
+        global $COURSE, $USER, $OUTPUT, $CFG, $SITE;
 
         // Get all courses news.
 
@@ -113,85 +123,135 @@ class block_news_slider extends block_base {
             }
         }
 
-        // Check what type of news to display from config.  This variable is unused at present.
+        // This variable is created to pass in an argument in calls to functions outside of this class (i.e. news_slider_get_course_news).
+        // This is done incase slider is displayed when a user is not logged in, as it complains about
+        // the non-existence of config instances in functions called that are outside of this class.
+        $sliderconfig = new stdClass();
+
+        // Check what type of news to display from config.
         if (!empty($this->config->displaymode)) {
             $newstype = $this->config->displaymode;
         } else {
             $newstype = $this::DISPLAY_MODE_ALL_NEWS;
         }
 
-        // DEBUG line: echo "Display type is " . $newstype . '<br>';.
+        if (!empty($this->config->siteitemstoshow)) {
+            $sliderconfig->siteitemstoshow = $this->config->siteitemstoshow;
+        } else {
+            $sliderconfig->siteitemstoshow = $this::NEWS_SLIDER_DEFAULT_SITE_NEWS_ITEMS;
+        }
 
-        // Extract any assignments that are due and any news items.
-        $assignments = array();
+        if (!empty($this->config->siteitemsperiod)) {
+            $sliderconfig->siteitemsperiod = $this->config->siteitemsperiod;
+        } else {
+            $sliderconfig->siteitemsperiod = $this::NEWS_SLIDER_DEFAULT_SITE_NEWS_PERIOD;
+        }
+
         $newsblock = new stdClass;
         $newsblock->headlines = array();
         $newsblock->newsitems = array();
         $coursenews = array();
         $tempnews = array();
-        $isteacher = false;
 
         $newscontent = array();
+
+        if ( ($newstype == $this::DISPLAY_MODE_ALL_NEWS) || ($newstype == $this::DISPLAY_MODE_COURSE_NEWS) ) {
+            foreach ($allcourses as $course) {
+                $tempnews = news_slider_get_course_news($course);
+                if (!empty($tempnews)) {
+                    $this->format_course_news_items ($course, $tempnews, $coursenews);
+                }
+
+            } // End foreach.
+        }
+
+        if ( ($newstype == $this::DISPLAY_MODE_ALL_NEWS) || ($newstype == $this::DISPLAY_MODE_SITE_NEWS) ) {
+            global $SITE;
+            $tempnews = news_slider_get_course_news($SITE, true, $sliderconfig);
+            if (!empty($tempnews)) {
+                $this->format_course_news_items ($SITE, $tempnews, $coursenews);
+            }
+        }
+
+        if (empty($coursenews)) {
+            $coursenews[] = array(
+                    'message'         => get_string('nonewsitems', 'block_news_slider') 
+            );
+        } else {
+            // Sort course news items.
+            foreach ($coursenews as $key => $row) {
+                // replace 0 with the field's index/key
+                $dates[$key]  = $row['datemodified'];
+            }
+            array_multisort($dates, SORT_DESC, $coursenews);
+            
+        }
+
+        return $coursenews;
+    }
+
+    /**
+     * Format news items ready for display and rendering by a template.
+     *
+     * @param stdClass $course The course from which to get the news items for the current user
+     * @param array    $newsitems Array of news items to format
+     * @param array    The array to which to formatted news items
+     *
+     * @return None
+     *
+     */
+    private function format_course_news_items($course, $newsitems, &$returnedcoursenews) {
+        global $SITE;
 
         $config = get_config("block_news_slider");
         $excerptlength = $config->excerptlength;
         $subjectmaxlength = $config->subjectmaxlength;
 
-        foreach ($allcourses as $course) {
-            $tempnews = news_slider_get_course_news($course);
-            if (!empty($tempnews)) {
-                foreach ($tempnews as $news) {
-                    $newslink = new moodle_url('/mod/forum/discuss.php', array('d' => $news['discussion']));
-                    // echo $newslink;
+        foreach ($newsitems as $news) {
+            $newslink = new moodle_url('/mod/forum/discuss.php', array('d' => $news['discussion']));
 
-                    // Subject.  Trim if longer than $subjectmaxlength.
-                    $subject = $news['subject'];
+            // Subject.  Trim if longer than $subjectmaxlength.
+            $subject = $news['subject'];
 
-                    if (strlen($subject) > $subjectmaxlength) {
-                        $subject = preg_replace('/\s+?(\S+)?$/', '', substr($subject, 0, $subjectmaxlength)) . " ... [ Read More ]";
-                    }
-
-                    $headline = html_writer::tag('div', html_writer::link(new moodle_url('/mod/forum/discuss.php',
-                            array('d' => $news['discussion'])), $news['subject']),
-                            array('class' => 'news_sliderNewsHeadline'));
-
-                    /* $headline = html_writer::tag('div', $subject,
-                            array('class' => 'news_sliderNewsHeadline')); */
-
-                    if ( (!empty($excerptlength)) && ($excerptlength == 0) ) {
-                        $newsmessage = $news['message'];
-                    } else if (strlen($news['message']) > $excerptlength) {
-                        $newsmessage = news_slider_truncate_news($news['message'], $excerptlength, " .. [ Read More ]");
-                    } else {
-                        $newsmessage = $news['message'];
-                    }
-
-                    $newsmessage = '<a href="' . $newslink . '">' . $newsmessage . '</a>';
-
-                    // For small screen displays, prepare a shorter version of news message, regardless
-                    // of excerpt length config.
-                    $shortnewsexcerptlength = 70;
-                    $shortnewsmessage = news_slider_truncate_news($news['message'], $shortnewsexcerptlength, " .. [ Read More ]");
-                    $shortnewsmessage = '<a href="' . $newslink . '">' . $shortnewsmessage . '</a>';
-
-                    $coursenews[] = array('headline'  => $headline,
-                            'author'          => $news['author'],
-                            'courseshortname' => $course->shortname,
-                            'message'         => $newsmessage,
-                            'shortmessage'    => $shortnewsmessage,
-                            'userdayofdate'   => date('l', $news['modified']),
-                            'userdate'        => date('d/m/Y', $news['modified']),
-                            'userid'          => $news['userid'],
-                            'userpicture'     => $news['userpicture'],
-                            'link'            => $newslink,
-                            'profilelink'     => new moodle_url('/user/view.php', array('id'=>$news['userid'], 'course'=>$course->id))
-                    );
-                }
+            if (strlen($subject) > $subjectmaxlength) {
+                $subject = preg_replace('/\s+?(\S+)?$/', '', substr($subject, 0, $subjectmaxlength)) . " ... [ Read More ]";
             }
 
-        }
-        return $coursenews;
+            $headline = html_writer::tag('div', html_writer::link(new moodle_url('/mod/forum/discuss.php',
+                    array('d' => $news['discussion'])), $news['subject']),
+                    array('class' => 'news_sliderNewsHeadline'));
 
+            if ( (!empty($excerptlength)) && ($excerptlength == 0) ) {
+                $newsmessage = $news['message'];
+            } else if (strlen($news['message']) > $excerptlength) {
+                $newsmessage = news_slider_truncate_news($news['message'], $excerptlength, " .. [ Read More ]");
+            } else {
+                $newsmessage = $news['message'];
+            }
+
+            $newsmessage = '<a href="' . $newslink . '">' . $newsmessage . '</a>';
+
+            // For small screen displays, prepare a shorter version of news message, regardless
+            // of excerpt length config.
+            $shortnewsexcerptlength = 70;
+            $shortnewsmessage = news_slider_truncate_news($news['message'], $shortnewsexcerptlength, " .. [ Read More ]");
+            $shortnewsmessage = '<a href="' . $newslink . '">' . $shortnewsmessage . '</a>';
+
+            $returnedcoursenews[] = array('headline'  => $headline,
+                    'author'          => ', by ' . $news['author'],
+                    'courseshortname' => ($course->id == $SITE->id) ? "Site Announcement" : $course->shortname,
+                    'message'         => $newsmessage,
+                    'shortmessage'    => $shortnewsmessage,
+                    'userdayofdate'   => date('l', $news['modified']),
+                    'datemodified'    => $news['modified'],
+                    'userdate'        => date('d/m/Y', $news['modified']),
+                    'userid'          => $news['userid'],
+                    'userpicture'     => $news['userpicture'],
+                    'link'            => $newslink,
+                    'profilelink'     => new moodle_url('/user/view.php', array('id'=>$news['userid'], 'course'=>$course->id))
+            );
+
+        }
     }
 
     /**

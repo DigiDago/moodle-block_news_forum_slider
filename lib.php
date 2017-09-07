@@ -15,12 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * News slider block helper functions and callbacks
+ * News slider block helper functions and callbacks.
  *
  * @package block_news_slider
  * @copyright 2017 John Tutchings (Coventry University)
  * @copyright 2017 Manoj Solanki (Coventry University)
- * @copyright
  * @copyright
  *
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -38,7 +37,7 @@ $defaultblocksettings = array(
 );
 
 /**
- * Get an overview of activity per course for the current user
+ * Get an overview of activity per course for the current user.
  *
  * @param  stdClass  $courses          An array of courses that the user is on
  * @param  array     $remotecourses    An array of remote courses, if any
@@ -95,37 +94,58 @@ function news_slider_get_overview($courses, array $remotecourses = array()) {
     return $returncourses;
 }
 
-
 /**
- * Get the news items that need to be displayed
+ * Get news items that need to be displayed.
  *
  * @param stdClass $course a course to get the news items from for the current user
+ * @param bool     $getsitenews optional flag.  If set to true, get site news instead
+ * @param stdClass $sliderconfig  Object containing config data
+ * 
  * @return array List of news items to show
  */
-function news_slider_get_course_news($course) {
+function news_slider_get_course_news($course, $getsitenews = false, $sliderconfig = null) {
     global $USER, $OUTPUT;
 
     $posttext = '';
 
     $newsitems = array();
-    $lastlogin = 0;
-    if (!isset($USER->lastcourseaccess[$course->id])) {
-        $USER->lastcourseaccess[$course->id] = $lastlogin;
+
+    // If getsitenews is set to true, get site news instead.
+    if ($getsitenews) {
+        global $SITE;
+
+        if (! $newsforum = forum_get_course_forum($SITE->id, "news")) {
+            return $newsitems;
+        }
+        $cm = get_coursemodule_from_instance('forum', $newsforum->id, $SITE->id, false, MUST_EXIST);
+
+        $postsdaystoshow = $sliderconfig->siteitemstoshow;
+        $postsupdatedsince = $sliderconfig->siteitemsperiod * 86400;
+        $postsupdatedsince = time() - $postsupdatedsince;
+        $discussions = forum_get_discussions($cm, "", true, null, $postsdaystoshow, null, null, null, null, $postsupdatedsince);
+    } else {
+        $newsforum = forum_get_course_forum($course->id, 'news');
+        $cm = get_coursemodule_from_instance('forum', $newsforum->id, $newsforum->course);
+        $discussions = forum_get_discussions($cm);
     }
-    $newsforum = forum_get_course_forum($course->id, 'news');
-    $cm = get_coursemodule_from_instance('forum', $newsforum->id, $newsforum->course);
 
     $strftimerecent = get_string('strftimerecent');
-    $discussions = forum_get_discussions($cm);
-    $notread = forum_get_discussions_unread($cm);
-    if (count($notread) < 1) {
-        $discussions = array();
+
+    // Do not get unread items if displaying site news.
+    if (!$getsitenews) {
+        $notread = forum_get_discussions_unread($cm);
+        if (count($notread) < 1) {
+            $discussions = array();
+        }
     }
 
     foreach ($discussions as $discussion) {
 
-        if (empty($notread[$discussion->discussion])) {
-            continue;
+        // Check for unread news items only if not retrieving site news.
+        if (!$getsitenews) {
+            if (empty($notread[$discussion->discussion])) {
+                continue;
+            }
         }
 
         // Get user profile picture.
@@ -165,7 +185,7 @@ function news_slider_get_course_news($course) {
  * @param stdClass  $length The length to trim it down to.
  * @param stdClass  $ending  What to display at the end of the string if we have trimmed the item.
  * @param stdClass  $exact
- * @param stdClass  $considerhtml If the html make up tages should be ignored in the lenght to trim the text down to.
+ * @param stdClass  $considerhtml If the html make up tages should be ignored in the length to trim the text down to.
  * @return string
  */
 function news_slider_truncate_news($text, $length = 100, $ending = '...', $exact = false, $considerhtml = true) {
