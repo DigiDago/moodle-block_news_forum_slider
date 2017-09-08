@@ -88,7 +88,12 @@ class block_news_slider extends block_base {
 
         $newscontentjson = new stdClass();
 
-        $newscontentjson->title = get_string('bannertitle', 'block_news_slider');
+        if (!empty ($config->bannertitle)) {
+            $newscontentjson->title = $config->bannertitle;
+        } else {
+            $newscontentjson->title = get_string('bannertitle', 'block_news_slider');
+        }
+
         $newscontentjson->news = array_values($newsblock);
 
         $PAGE->requires->css('/blocks/news_slider/slick/slick.css');
