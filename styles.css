@@ -26,12 +26,12 @@
 }
 
 .slider .authorline {
-	font-size: 12px;
+    font-size: 12px;
 }
 
 .slider .newscontent p {
-	padding: 10px 10px;
-} 
+    padding: 10px 10px;
+}
 
 .slider .newscontent a {
     font-weight: 400;
@@ -41,7 +41,7 @@
 }
 
 .slider-banner-col {
-	height: 130px;
+    height: 130px;
     display: none;
 }
 
@@ -71,8 +71,8 @@
 }
 
 .slider-col-date-minimal {
-	display: block;
-	color: #555;
+    display: block;
+    color: #555;
 }
 
 .message-short {
@@ -84,52 +84,50 @@
 }
 
 @media only screen and (min-width: 1024px) {
+    .slider-banner-col {
+        width: 20%;
+        max-width: 1250px;
+        height: 100%;
+        background-color: #F15C22;
+        float: left;
+        position: relative;
 
-	.slider-banner-col {
-	    width: 20%;
-	    max-width: 1250px;
-	    height: 100%;
-	    background-color: #F15C22;
-	    float: left;
-	    position: relative;
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-flex-align: center;
+        -ms-flex-align: center;
+        -webkit-align-items: center;
+        align-items: center;
+    }
 
-		display: -webkit-box;
-		display: -webkit-flex;
-		display: -moz-box;
-		display: -ms-flexbox;
-		display: flex;
-		-webkit-flex-align: center;
-		-ms-flex-align: center;
-		-webkit-align-items: center;
-		align-items: center;
+    .slider-banner-col span {
+        color: #fff;
+        text-decoration: none;
+        font-size: 20px;
+        font-weight: 800;
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+    }
 
-	}
-
-	.slider-banner-col span {
-	    color: #fff;
-	    text-decoration: none;
-	    font-size: 20px;
-	    font-weight: 800;
-	    text-align: center;
-	    margin-left: auto;
-	    margin-right: auto;
-	}
-
-	.slider-col {
-		padding: 10px 15px;
-		background-color: #EEEEEE;
-		height: 100%;
-		width: 80%;
-		float: left;
-	}
+    .slider-col {
+        padding: 10px 15px;
+        background-color: #EEEEEE;
+        height: 100%;
+        width: 80%;
+        float: left;
+    }
 
     .slider .headline a {
         font-size: 16px;
     }
 
     .slider .authorline {
-    font-size: 12px;
-}
+        font-size: 12px;
+    }
 
     .slider-col-date-minimal {
         display: none;
@@ -141,12 +139,12 @@
     }
 
     .message-short {
-        display: none; 
+        display: none;
     }
 
-	.message {
-	    display: block; 
-	}
+    .message {
+        display: block;
+    }
 }
 
 @media only screen and (min-width: 1280px) {

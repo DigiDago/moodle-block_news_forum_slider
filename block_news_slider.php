@@ -53,7 +53,7 @@ class block_news_slider extends block_base {
     const NEWS_SLIDER_DEFAULT_SITE_NEWS_ITEMS = 4;
 
     /** @var int Default site news period to show */
-    const NEWS_SLIDER_DEFAULT_SITE_NEWS_PERIOD = 7; // In days
+    const NEWS_SLIDER_DEFAULT_SITE_NEWS_PERIOD = 7; // In days.
 
     /** @var int Default no news display text */
     const DISPLAY_NO_NEWS_TEXT = "You do not have any unread news posts at the moment";
@@ -123,9 +123,10 @@ class block_news_slider extends block_base {
             }
         }
 
-        // This variable is created to pass in an argument in calls to functions outside of this class (i.e. news_slider_get_course_news).
-        // This is done incase slider is displayed when a user is not logged in, as it complains about
-        // the non-existence of config instances in functions called that are outside of this class.
+        // This variable is created to pass in an argument in calls to functions outside of this class
+        // (i.e. news_slider_get_course_news).  This is done when the slider is displayed when a user
+        // is not logged in, as the code complains about the non-existence of config instances in
+        // functions called that are outside of this class.
         $sliderconfig = new stdClass();
 
         // Check what type of news to display from config.
@@ -175,16 +176,16 @@ class block_news_slider extends block_base {
 
         if (empty($coursenews)) {
             $coursenews[] = array(
-                    'message'         => get_string('nonewsitems', 'block_news_slider') 
+                    'message' => get_string('nonewsitems', 'block_news_slider')
             );
         } else {
             // Sort course news items.
             foreach ($coursenews as $key => $row) {
-                // replace 0 with the field's index/key
+                // Replace 0 with the field's index/key.
                 $dates[$key]  = $row['datemodified'];
             }
             array_multisort($dates, SORT_DESC, $coursenews);
-            
+
         }
 
         return $coursenews;
@@ -195,7 +196,7 @@ class block_news_slider extends block_base {
      *
      * @param stdClass $course The course from which to get the news items for the current user
      * @param array    $newsitems Array of news items to format
-     * @param array    The array to which to formatted news items
+     * @param array    $returnedcoursenews The array to which to formatted news items
      *
      * @return None
      *
@@ -248,7 +249,7 @@ class block_news_slider extends block_base {
                     'userid'          => $news['userid'],
                     'userpicture'     => $news['userpicture'],
                     'link'            => $newslink,
-                    'profilelink'     => new moodle_url('/user/view.php', array('id'=>$news['userid'], 'course'=>$course->id))
+                    'profilelink'     => new moodle_url('/user/view.php', array('id' => $news['userid'], 'course' => $course->id))
             );
 
         }

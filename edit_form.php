@@ -42,7 +42,7 @@ class block_news_slider_edit_form extends block_edit_form {
         global $CFG;
         $mform->addElement('header', 'configheader', get_string('blocksettings', 'block'));
 
-        // Display mode, all news, site news or course news
+        // Display mode, all news, site news or course news.
         $displaymodeoptions = array(
                 block_news_slider::DISPLAY_MODE_ALL_NEWS    => get_string('displaymodestringall', 'block_news_slider'),
                 block_news_slider::DISPLAY_MODE_SITE_NEWS   => get_string('displaymodestringsite', 'block_news_slider'),

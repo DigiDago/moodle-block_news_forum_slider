@@ -100,7 +100,7 @@ function news_slider_get_overview($courses, array $remotecourses = array()) {
  * @param stdClass $course a course to get the news items from for the current user
  * @param bool     $getsitenews optional flag.  If set to true, get site news instead
  * @param stdClass $sliderconfig  Object containing config data
- * 
+ *
  * @return array List of news items to show
  */
 function news_slider_get_course_news($course, $getsitenews = false, $sliderconfig = null) {
@@ -156,9 +156,9 @@ function news_slider_get_course_news($course, $getsitenews = false, $sliderconfi
         $postuser = username_load_fields_from_object($postuser, $discussion, null, $postuserfields);
         $postuser->id = $discussion->userid;
         $postuser->fullname    = $discussion->firstname . ' ' . $discussion->lastname;
-        $postuser->profilelink = new moodle_url('/user/view.php', array('id' => $discussion->userid, 'course'=>$course->id));
+        $postuser->profilelink = new moodle_url('/user/view.php', array('id' => $discussion->userid, 'course' => $course->id));
 
-        $userpicture = $OUTPUT->user_picture($postuser, array('courseid'=>$course->id, 'size' => 80));
+        $userpicture = $OUTPUT->user_picture($postuser, array('courseid' => $course->id, 'size' => 80));
 
         $newsitems[$discussion->id]['course'] = $course->shortname;
         $newsitems[$discussion->id]['courseid'] = $course->id;
