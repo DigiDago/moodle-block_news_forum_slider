@@ -22,7 +22,7 @@
 
 .slider .newscontent .headline  a:hover,
 .slider .newscontent a:hover {
-    color: #06C !important;
+    color: #0070a8 !important;
 }
 
 .slider .authorline {
@@ -37,6 +37,15 @@
     font-weight: 400;
     line-height: normal;
     font-size: 95%;
+    color: #333333 !important;
+}
+
+
+.block .content .newscontent a:hover {
+    color: #0070a8 !important;
+}
+
+.slider .newscontent a:hover {
     color: #333333 !important;
 }
 
@@ -75,11 +84,13 @@
     color: #555;
 }
 
-.message-short {
+.slider-message-short {
+    padding-top: 2px;
     display: block;
 }
 
-.message {
+.slider-message {
+	padding-top: 2px;
     display: none;
 }
 
@@ -138,11 +149,11 @@
         font-size: 14px;
     }
 
-    .message-short {
+    .slider-message-short {
         display: none;
     }
 
-    .message {
+    .slider-message {
         display: block;
     }
 }

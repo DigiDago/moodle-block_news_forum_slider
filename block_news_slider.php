@@ -15,11 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details
+ * Moodle News Slider block.  Displays course and site announcements.
  *
  * @package block_news_slider
  * @copyright 2017 Manoj Solanki (Coventry University)
- * @copyright
  * @copyright
  *
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -227,21 +226,24 @@ class block_news_slider extends block_base {
                     array('d' => $news['discussion'])), $news['subject']),
                     array('class' => 'news_sliderNewsHeadline'));
 
-            if ( (!empty($excerptlength)) && ($excerptlength == 0) ) {
-                $newsmessage = $news['message'];
-            } else if (strlen($news['message']) > $excerptlength) {
-                $newsmessage = news_slider_truncate_news($news['message'], $excerptlength, " .. [ Read More ]");
-            } else {
-                $newsmessage = $news['message'];
-            }
+            $readmorelink = '<a href="' . $newslink . '">[ Read More ]</a>';
 
-            $newsmessage = '<a href="' . $newslink . '">' . $newsmessage . '</a>';
+            if ( (!empty($excerptlength)) && ($excerptlength == 0) ) {
+                $newsmessage = '<a href="' . $newslink . '">' . strip_tags($news['message']) . '</a>';
+            } else if (strlen($news['message']) > $excerptlength) {
+                $newsmessage = news_slider_truncate_news(strip_tags($news['message']), $excerptlength, ' .. ');
+                $newsmessage .= $readmorelink;
+            } else {
+                $newsmessage = '<a href="' . $newslink . '">' . strip_tags($news['message']) . '</a>';
+            }
 
             // For small screen displays, prepare a shorter version of news message, regardless
             // of excerpt length config.
             $shortnewsexcerptlength = 70;
-            $shortnewsmessage = news_slider_truncate_news($news['message'], $shortnewsexcerptlength, " .. [ Read More ]");
-            $shortnewsmessage = '<a href="' . $newslink . '">' . $shortnewsmessage . '</a>';
+            $shortnewsmessage = news_slider_truncate_news(strip_tags($news['message']), $shortnewsexcerptlength, ' .. ');
+            if (strstr ($shortnewsmessage, ' .. '))
+                $shortnewsmessage .= $readmorelink;
+            $shortnewsmessage = '<a href="' . $newslink . '">' . $shortnewsmessage . ' </a>';
 
             $returnedcoursenews[] = array('headline'  => $headline,
                     'author'          => ', by ' . $news['author'],
