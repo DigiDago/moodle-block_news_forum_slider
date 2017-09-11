@@ -28,7 +28,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-define('NEWS_SLIDER_EXCERPT_LENGTH', 130);
+define('NEWS_SLIDER_EXCERPT_LENGTH', 110);
 define('NEWS_SLIDER_SUBJECT_MAX_LENGTH', 30);
 
 $defaultblocksettings = array(
