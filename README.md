@@ -46,6 +46,7 @@ Adaptable Theme version 2017053100 (1.4)
 Developed by:
 
  * Manoj Solanki (Coventry University)
+ * John Tutchings (Coventry University)
 
 Co-maintained by:
 
