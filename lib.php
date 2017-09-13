@@ -26,6 +26,8 @@
  *
  */
 
+require_once($CFG->dirroot . "/mod/forum/lib.php");
+
 defined('MOODLE_INTERNAL') || die;
 
 define('NEWS_SLIDER_EXCERPT_LENGTH', 110);
