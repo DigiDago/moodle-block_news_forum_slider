@@ -11,29 +11,43 @@ A news slider that displays unread course announcements and site announcements.
 
 # Per instance configuration  #
 
-- Option to display site news, course news or both
+- Option to display site news or course news or both
 - Maximum number of site announcements to display
 - Maximum period (in days) to show site announcements for
 
-* Version
-
 # Guidelines for use #
 
-You may  want to experiment with the general configuration settings. E.g. for wider displays, you could increase max lengths and vice-versa.
+You may want to experiment with the general configuration settings. E.g. for wider displays, you could increase max lengths and vice-versa.
 
-Version 1.0 (2017090800)
+Version 1.0 (2017091300)
 
 ### How do I get set up? ###
 
 Installs at <moodleroot>/blocks/news_slider
 
-* Dependencies
+## Settings ##
 
-Adaptable Theme version 2017053100
+Site-wide configuration options are available under: 
+Site Administration -> Plugins -> Blocks -> News slider
 
-### Contribution guidelines ###
+Per Instance block settings are available by editing block configuration.
 
-* Writing tests
-* Other guidelines
+# Dependencies #
 
-### Who do I talk to? ###
+Adaptable Theme version 2017053100 (1.4)
+
+### Compatibility ###
+
+- Moodle 3.2, 3.3
+- Adaptable version 1.4
+
+### Contribution ###
+
+Developed by:
+
+ * Manoj Solanki (Coventry University)
+
+Co-maintained by:
+
+ * Jeremy Hopkins (Coventry University)
+ * Fernando Acedo (3-bits.com)
