@@ -37,5 +37,5 @@ $plugin->requires = 2016120500;
 
 $plugin->dependencies = array('theme_adaptable' => 2017053100);
 
-$plugin->maturity = MATURITY_BETA;
+$plugin->maturity = MATURITY_STABLE;
 $plugin->release = "1.0";
