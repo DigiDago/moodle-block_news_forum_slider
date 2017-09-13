@@ -51,3 +51,8 @@ Co-maintained by:
 
  * Jeremy Hopkins (Coventry University)
  * Fernando Acedo (3-bits.com)
+ 
+ ### Licenses ###
+
+Adaptable is licensed under:
+GPL v3 (GNU General Public License) - http://www.gnu.org/licenses
