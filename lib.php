@@ -18,8 +18,8 @@
  * News slider block helper functions and callbacks.
  *
  * @package block_news_slider
- * @copyright 2017 John Tutchings (Coventry University)
  * @copyright 2017 Manoj Solanki (Coventry University)
+ * @copyright 2017 John Tutchings (Coventry University)
  * @copyright
  *
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later

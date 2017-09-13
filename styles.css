@@ -2,38 +2,38 @@
 /* CSS Document */
 
 
-.slick-dots button, .slick-dots button:active {
+.news-slider .slick-dots button, .slick-dots button:active {
 
     border: none;
     box-shadow: none;
     -webkit-box-shadow: none;
 }
 
-.slider .newscontent .headline {
+.news-slider .newscontent .headline {
     line-height: normal;
     font-size: 18px;
     font-weight: bold;
     padding-bottom: 8px;
 }
 
-.slider .newscontent .headline a {
+.news-slider .newscontent .headline a {
     color: #444 !important;
 }
 
-.slider .newscontent .headline  a:hover,
-.slider .newscontent a:hover {
+.news-slider .newscontent .headline  a:hover,
+.news-slider .newscontent a:hover {
     color: #0070a8 !important;
 }
 
-.slider .authorline {
+.news-slider .authorline {
     font-size: 12px;
 }
 
-.slider .newscontent p {
+.news-slider .newscontent p {
     padding: 10px 10px;
 }
 
-.slider .newscontent a {
+.news-slider .newscontent a {
     font-weight: 400;
     line-height: normal;
     font-size: 95%;
@@ -132,11 +132,11 @@
         float: left;
     }
 
-    .slider .headline a {
+    .news-slider .headline a {
         font-size: 16px;
     }
 
-    .slider .authorline {
+    .news-slider .authorline {
         font-size: 12px;
     }
 
@@ -160,11 +160,11 @@
 
 @media only screen and (min-width: 1280px) {
 
-    .slider .headline a {
+    .news-slider .headline a {
         font-size: 22px;
     }
 
-    .slider .authorline {
+    .news-slider .authorline {
         font-size: 14px;
     }
 
