@@ -115,9 +115,7 @@ class block_news_slider extends block_base {
         global $COURSE, $USER, $OUTPUT, $CFG, $SITE;
 
         // Get all courses news.
-
-        $allcourses = news_slider_get_overview(enrol_get_my_courses('id, shortname',
-                'visible DESC,sortorder ASC'));
+        $allcourses = enrol_get_my_courses('id, shortname', 'visible DESC,sortorder ASC');
 
         foreach ($allcourses as $c) {
             if (isset($USER->lastcourseaccess[$c->id])) {

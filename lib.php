@@ -37,64 +37,6 @@ $defaultblocksettings = array(
 );
 
 /**
- * Get an overview of activity per course for the current user.
- *
- * @param  stdClass  $courses          An array of courses that the user is on
- * @param  array     $remotecourses    An array of remote courses, if any
- * @return array An array of the overview course activity for each course since the users last access
- */
-function news_slider_get_overview($courses, array $remotecourses = array()) {
-    global $CFG, $USER, $DB;
-
-    $htmlarray = array();
-
-    foreach ($courses as $course) {
-
-        if (isset($USER->lastcourseaccess[$course->id])) {
-            $course->lastaccess = $USER->lastcourseaccess[$course->id];
-        } else {
-            $course->lastaccess = 0;
-        }
-        $course->mods = array();
-    }
-
-    $modules = $DB->get_records('modules');
-    if ($modules) {
-        foreach ($modules as $mod) {
-            if (file_exists($CFG->dirroot . '/mod/' . $mod->name . '/lib.php')) {
-                include_once($CFG->dirroot . '/mod/' . $mod->name . '/lib.php');
-                $fname = $mod->name . '_print_overview';
-                if (function_exists($fname)) {
-                    $fname($courses, $htmlarray);
-                }
-            }
-        }
-    }
-
-    $returncourses = array();
-
-    foreach ($courses as $course) {
-
-        if (array_key_exists($course->id, $htmlarray)) {
-
-            foreach ($htmlarray[$course->id] as $modname => $html) {
-                $course->mods[$modname]['displaytext'] = $html;
-
-                $course->mods[$modname]['icon'] = '/theme/image.php/' . $CFG->theme . '/' . $modname . '/1/icon';
-            }
-        }
-
-        $returncourses[$course->shortname] = $course;
-    }
-
-    foreach ($remotecourses as $course) {
-        $course->remoteurl = true;
-        $returncourses[$course->shortname] = $course;
-    }
-    return $returncourses;
-}
-
-/**
  * Get news items that need to be displayed.
  *
  * @param stdClass $course a course to get the news items from for the current user
