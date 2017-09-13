@@ -241,8 +241,9 @@ class block_news_slider extends block_base {
             // of excerpt length config.
             $shortnewsexcerptlength = 70;
             $shortnewsmessage = news_slider_truncate_news(strip_tags($news['message']), $shortnewsexcerptlength, ' .. ');
-            if (strstr ($shortnewsmessage, ' .. '))
+            if (strstr ($shortnewsmessage, ' .. ')) {
                 $shortnewsmessage .= $readmorelink;
+            }
             $shortnewsmessage = '<a href="' . $newslink . '">' . $shortnewsmessage . ' </a>';
 
             $returnedcoursenews[] = array('headline'  => $headline,
