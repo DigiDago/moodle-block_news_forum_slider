@@ -122,7 +122,7 @@
     left: auto;
 }
 
- .news-slider .news-slider .slick-prev:before
+ .news-slider .slick-prev:before
 {
     content: '←';
 }
