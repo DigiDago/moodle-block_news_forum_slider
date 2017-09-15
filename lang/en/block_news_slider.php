@@ -25,6 +25,9 @@
 $string['pluginname'] = 'News Slider';
 $string['blocktitle'] = 'News Slider';
 
+$string['news_slider:addinstance'] = 'Add a News Slider block';
+$string['news_slider:myaddinstance'] = 'Add a News Slider block to the My Moodle page.';
+
 $string['displaymode'] = 'News content display toggle';
 $string['displaymodestringall'] = 'ALL (Site + Course News)';
 $string['displaymodestringsite'] = 'Site news only';
