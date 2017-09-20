@@ -249,7 +249,7 @@ class block_news_slider extends block_base {
                     'courseshortname' => ($course->id == $SITE->id) ? "Site Announcement" : $course->shortname,
                     'message'         => $newsmessage,
                     'shortmessage'    => $shortnewsmessage,
-                    'userdayofdate'   => date('l', $news['modified']),
+                    'userdayofdate'   => date('l', $news['modified']) . ',',
                     'datemodified'    => $news['modified'],
                     'userdate'        => date('d/m/Y', $news['modified']),
                     'userid'          => $news['userid'],
@@ -259,6 +259,13 @@ class block_news_slider extends block_base {
             );
 
         }
+    }
+
+    /**
+     * Allows multiple instances of the block.
+     */
+    public function instance_allow_multiple() {
+        return true;
     }
 
     /**
