@@ -11,7 +11,6 @@ define(['jquery', 'block_news_slider/slick', 'theme_bootstrapbase/bootstrap', 'c
 
                 $('.responsive').slick({
                     dots: true,
-                    infinite: false,
                     speed: 300,
                     slidesToShow: 1,
                     slidesToScroll: 1,
@@ -22,9 +21,7 @@ define(['jquery', 'block_news_slider/slick', 'theme_bootstrapbase/bootstrap', 'c
                             breakpoint: 1024,
                             settings: {
                                 slidesToShow: 1,
-                                slidesToScroll: 1,
-                                infinite: true,
-                                dots: true
+                                slidesToScroll: 1
                             }
                     },
                       {
