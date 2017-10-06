@@ -217,11 +217,11 @@ class block_news_slider extends block_base {
             $subject = $news['subject'];
 
             if (strlen($subject) > $subjectmaxlength) {
-                $subject = preg_replace('/\s+?(\S+)?$/', '', substr($subject, 0, $subjectmaxlength)) . " ... [ Read More ]";
+                $subject = preg_replace('/\s+?(\S+)?$/', '', substr($subject, 0, $subjectmaxlength)) . " ... ";
             }
 
             $headline = html_writer::tag('div', html_writer::link(new moodle_url('/mod/forum/discuss.php',
-                    array('d' => $news['discussion'])), $news['subject']),
+                    array('d' => $news['discussion'])), $subject),
                     array('class' => 'news_sliderNewsHeadline'));
 
             $readmorelink = '<a href="' . $newslink . '">[ Read More ]</a>';
