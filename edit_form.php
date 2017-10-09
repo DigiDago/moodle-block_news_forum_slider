@@ -61,5 +61,9 @@ class block_news_slider_edit_form extends block_edit_form {
         $mform->setDefault('config_siteitemsperiod', block_news_slider::NEWS_SLIDER_DEFAULT_SITE_NEWS_PERIOD);
         $mform->setType('config_siteitemsperiod', PARAM_TEXT);
 
+        // Show old site news link yes / no option.
+        $mform->addElement('selectyesno', 'config_showoldnews', get_string('showoldnews', 'block_news_slider'));
+        $mform->setDefault('config_showoldnews', 0);
+
     }
 }

@@ -30,6 +30,7 @@ defined('MOODLE_INTERNAL') || die;
 require_once($CFG->dirroot . '/user/profile/lib.php');
 require_once($CFG->dirroot . '/user/lib.php');
 require_once($CFG->libdir . '/externallib.php');
+require_once($CFG->dirroot .'/course/lib.php'); // Included to be able to get site news older posts.
 require_once(dirname(__FILE__) . '/lib.php');
 
 /**
@@ -125,9 +126,9 @@ class block_news_slider extends block_base {
             }
         }
 
-        // This variable is created to pass in an argument in calls to functions outside of this class
+        // This variable is created to pass in as an argument in calls to functions outside of this class
         // (i.e. news_slider_get_course_news).  This is done when the slider is displayed when a user
-        // is not logged in, as the code complains about the non-existence of config instances in
+        // is not logged in, as the code complains (php errors) about the non-existence of config instances in
         // functions called that are outside of this class.
         $sliderconfig = new stdClass();
 
@@ -168,6 +169,7 @@ class block_news_slider extends block_base {
             } // End foreach.
         }
 
+        // Get site news.
         if ( ($newstype == $this::DISPLAY_MODE_ALL_NEWS) || ($newstype == $this::DISPLAY_MODE_SITE_NEWS) ) {
             global $SITE;
             $tempnews = news_slider_get_course_news($SITE, true, $sliderconfig);
@@ -224,15 +226,40 @@ class block_news_slider extends block_base {
                     array('d' => $news['discussion'])), $subject),
                     array('class' => 'news_sliderNewsHeadline'));
 
-            $readmorelink = '<a href="' . $newslink . '">[ Read More ]</a>';
+            $readmorelink = '';
 
             if ( (!empty($excerptlength)) && ($excerptlength == 0) ) {
                 $newsmessage = '<a href="' . $newslink . '">' . strip_tags($news['message']) . '</a>';
             } else if (strlen($news['message']) > $excerptlength) {
                 $newsmessage = news_slider_truncate_news(strip_tags($news['message']), $excerptlength, ' .. ');
+                $readmorelink = ' <a href="' . $newslink . '"><strong>[Read More]</strong></a>';
                 $newsmessage .= $readmorelink;
             } else {
                 $newsmessage = '<a href="' . $newslink . '">' . strip_tags($news['message']) . '</a>';
+            }
+
+            // Check if this is site news. If so, provide a link to older news if needed. (Issue #14).
+            $oldernewslink = "";
+            if ($course->id == $SITE->id) {
+
+                $newsforum = forum_get_course_forum($SITE->id, 'news');
+
+                if ($newsforum) {
+                    global $CFG;
+                    $oldnewsurl = $CFG->wwwroot . '/mod/forum/view.php?f=' . $newsforum->id . '&amp;showall=1';
+                    if ($readmorelink != '') {
+                        $oldernewslink .= ' | ';
+                    }
+                    $oldernewslink .= ' <a href="' . $oldnewsurl . '" title="Click here to view older posts">';
+                    $oldernewslink .= '<strong>[Older posts]</strong></a>';
+                } else {
+                    print_error('cannotfindorcreateforum', 'forum');
+                }
+            }
+
+            // Check config for displaying older posts.
+            if (!empty($this->config->showoldnews) && ($this->config->showoldnews == true) ) {
+                $newsmessage .= $oldernewslink;
             }
 
             // For small screen displays, prepare a shorter version of news message, regardless
