@@ -278,7 +278,7 @@ class block_news_slider extends block_base {
                     'shortmessage'    => $shortnewsmessage,
                     'userdayofdate'   => date('l', $news['modified']) . ',',
                     'datemodified'    => $news['modified'],
-                    'userdate'        => date('d/m/Y', $news['modified']),
+                    'userdatemodified'        => date('d/m/Y', $news['modified']),
                     'userid'          => $news['userid'],
                     'userpicture'     => $news['userpicture'],
                     'link'            => $newslink,
