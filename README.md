@@ -19,7 +19,7 @@ A news slider that displays unread course announcements and site announcements.
 
 You may want to experiment with the general configuration settings. E.g. for wider displays, you could increase max lengths and vice-versa.
 
-Version 1.0 (2017091300)
+Version 1.1 (2017100900)
 
 ### How do I get set up? ###
 
