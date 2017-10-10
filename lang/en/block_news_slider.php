@@ -28,6 +28,8 @@ $string['blocktitle'] = 'News Slider';
 $string['news_slider:addinstance'] = 'Add a News Slider block';
 $string['news_slider:myaddinstance'] = 'Add a News Slider block to the My Moodle page.';
 
+$string['cachedef_sliderdata'] = 'Cached data for the news slider';
+
 $string['displaymode'] = 'News content display toggle';
 $string['displaymodestringall'] = 'ALL (Site + Course News)';
 $string['displaymodestringsite'] = 'Site news only';
@@ -36,7 +38,7 @@ $string['subjectmaxlength'] = 'Max length of subject';
 $string['subjectmaxlengthdesc'] = 'Maximum length of subject text (number of characters).';
 $string['excerptlength'] = 'Length of excerpt';
 $string['excerptlengthdesc'] = 'Length of excerpt (number of characters). (Tip: Try 200 - 210 for longer wider layouts).';
-$string['bannertitle'] = 'Latest News';
+$string['bannertitle'] = 'Left Banner title';
 $string['bannertitledesc'] = 'Title that appears to the left of the slider.';
 $string['siteitemstoshow'] = 'Maximum number of site announcements to display';
 $string['siteitemsperiod'] = 'Maximum period to show site announcements for (in days)';

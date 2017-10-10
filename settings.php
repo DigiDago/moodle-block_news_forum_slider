@@ -37,7 +37,4 @@ if ($ADMIN->fulltree) {
             get_string('subjectmaxlength', 'block_news_slider'),
             get_string('subjectmaxlengthdesc', 'block_news_slider'), NEWS_SLIDER_SUBJECT_MAX_LENGTH, PARAM_INT));
 
-    $settings->add(new admin_setting_configtext('block_news_slider/bannertitle',
-            get_string('bannertitle', 'block_news_slider'),
-            get_string('bannertitledesc', 'block_news_slider'), get_string('bannertitle', 'block_news_slider')));
 }

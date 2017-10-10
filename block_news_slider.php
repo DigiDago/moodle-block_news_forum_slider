@@ -55,6 +55,9 @@ class block_news_slider extends block_base {
     /** @var int Default site news period to show */
     const NEWS_SLIDER_DEFAULT_SITE_NEWS_PERIOD = 7; // In days.
 
+    /** @var stringt Default left banner title */
+    const NEWS_SLIDER_DEFAULT_TITLE_BANNER = "Latest News";
+
     /** @var int Default no news display text */
     const DISPLAY_NO_NEWS_TEXT = "You do not have any unread news posts at the moment";
 
@@ -88,10 +91,10 @@ class block_news_slider extends block_base {
 
         $newscontentjson = new stdClass();
 
-        if (!empty ($config->bannertitle)) {
-            $newscontentjson->title = $config->bannertitle;
+        if (!empty ($this->config->bannertitle)) {
+            $newscontentjson->title = $this->config->bannertitle;
         } else {
-            $newscontentjson->title = get_string('bannertitle', 'block_news_slider');
+            $newscontentjson->title = $this::NEWS_SLIDER_DEFAULT_TITLE_BANNER;
         }
 
         $newscontentjson->news = array_values($newsblock);

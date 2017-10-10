@@ -49,6 +49,10 @@ class block_news_slider_edit_form extends block_edit_form {
                 block_news_slider::DISPLAY_MODE_COURSE_NEWS => get_string('displaymodestringcourse', 'block_news_slider')
         );
 
+        $mform->addElement('text', 'config_bannertitle', get_string('bannertitle', 'block_news_slider'));
+        $mform->setDefault('config_bannertitle', block_news_slider::NEWS_SLIDER_DEFAULT_TITLE_BANNER);
+        $mform->setType('config_bannertitle', PARAM_TEXT);
+
         $mform->addElement('select', 'config_displaymode', get_string('displaymode', 'block_news_slider'), $displaymodeoptions);
         $mform->setDefault('config_displaymode', block_news_slider::DISPLAY_MODE_ALL_NEWS);
         $mform->setType('config_displaymode', PARAM_INT);
