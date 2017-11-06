@@ -81,12 +81,6 @@ class block_news_slider extends block_base {
 
         $this->content = new stdClass;
 
-        // Do not display on any course pages except the main course.
-        /* if ($COURSE->id != 1) {
-            $this->content = '';
-            return $this->content;
-        } */
-
         $newsblock = $this->get_courses_news();
 
         $newscontentjson = new stdClass();
