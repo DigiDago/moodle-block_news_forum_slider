@@ -95,35 +95,37 @@ class block_news_slider extends block_base {
             $cache = cache::make('block_news_slider', self::CACHENAME_SLIDER);
     
             $returnedcachedata = $cache->get(self::CACHENAME_SLIDER_KEY);
-            $cachedatastore = array();  // Use this to write data to cache in array format, ['lastbuildtime'] = last access time, ['data'] = actual data.
+            $cachedatastore = array();  // Use this to write data to cache in array format, ['lastcachebuildtime'] = last access time, ['data'] = actual data.
     
             $usercachettl = $config->cachingttl;
 
             $timenow = time();
-    
-            if ($returnedcachedata === false) { // If no data retrieved.
 
+            if ( ($returnedcachedata === false) || (!isset($returnedcachedata['lastcachebuildtime'])) ) { // If no data retrieved or lastcachebuildtime has no value.
                 $cachedatastore['data'] = $this->get_courses_news();
-                $cachedatastore['lastbuildtime'] = time();
+                $cachedatastore['lastcachebuildtime'] = time();
                 $cache->set(self::CACHENAME_SLIDER_KEY, $cachedatastore);
 
-            } elseif ( $timenow > ($returnedcachedata['lastbuildtime'] + $usercachettl)) { // If user's last cache has expired since it was last built.
 
+            } else if ( $timenow > ($returnedcachedata['lastcachebuildtime'] + $usercachettl)) { // If user's last cache has expired since it was last built.
+                
                 $cachedatastore['data'] = $this->get_courses_news();
 
                 // Now timestamp the cache with last build time.
-                $cachedatastore['lastbuildtime'] = $timenow;
+                $cachedatastore['lastcachebuildtime'] = $timenow;
                 $cache->set(self::CACHENAME_SLIDER_KEY, $cachedatastore);
 
             } else {
                 $cachedatastore['data'] = $returnedcachedata['data'];  // We got valid, non-expired data from cache.
             }
-
+    
             $newsblock = $cachedatastore['data'];
 
         } else {
+            echo "Not using cache";
             $newsblock = $this->get_courses_news();
         }
+        
         
         $newscontentjson = new stdClass();
 
