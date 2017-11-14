@@ -37,4 +37,10 @@ if ($ADMIN->fulltree) {
             get_string('subjectmaxlength', 'block_news_slider'),
             get_string('subjectmaxlengthdesc', 'block_news_slider'), NEWS_SLIDER_SUBJECT_MAX_LENGTH, PARAM_INT));
 
+    $settings->add(new admin_setting_configcheckbox('block_news_slider/usecaching', get_string('usecaching', 'block_news_slider'),
+            get_string('usecachingdesc', 'block_news_slider'), 0));
+
+    $settings->add(new admin_setting_configtext('block_news_slider/cachingttl',
+            get_string('cachingttl', 'block_news_slider'),
+            get_string('cachingttldesc', 'block_news_slider'), NEWS_SLIDER_CACHING_TTL, PARAM_INT));
 }

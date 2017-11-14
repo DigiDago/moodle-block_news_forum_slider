@@ -44,3 +44,7 @@ $string['siteitemstoshow'] = 'Maximum number of site announcements to display';
 $string['siteitemsperiod'] = 'Maximum period to show site announcements for (in days)';
 $string['showoldnews'] = 'Show link to older news items (alongside "read more")';
 $string['nonewsitems'] = 'You do not have any unread news posts at the moment';
+$string['usecaching'] = 'Use caching';
+$string['usecachingdesc'] = 'Switch on caching (uses Moodle cache API)';
+$string['cachingttl'] = 'Caching Expiry time';
+$string['cachingttldesc'] = 'Caching expiry time in seconds (TTL)';

@@ -32,6 +32,7 @@ require_once($CFG->dirroot . "/mod/forum/lib.php");
 
 define('NEWS_SLIDER_EXCERPT_LENGTH', 110);
 define('NEWS_SLIDER_SUBJECT_MAX_LENGTH', 30);
+define('NEWS_SLIDER_CACHING_TTL', 300);
 
 $defaultblocksettings = array(
         'excerptlength' => NEWS_SLIDER_EXCERPT_LENGTH,

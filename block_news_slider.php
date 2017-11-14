@@ -55,11 +55,21 @@ class block_news_slider extends block_base {
     /** @var int Default site news period to show */
     const NEWS_SLIDER_DEFAULT_SITE_NEWS_PERIOD = 7; // In days.
 
-    /** @var stringt Default left banner title */
+    /** @var string Default left banner title */
     const NEWS_SLIDER_DEFAULT_TITLE_BANNER = "Latest News";
 
     /** @var int Default no news display text */
     const DISPLAY_NO_NEWS_TEXT = "You do not have any unread news posts at the moment";
+
+    /**
+     * @var CACHENAME_SLIDER  The name of the cache used for storing slider data.
+     */
+    const CACHENAME_SLIDER = 'sliderdata';
+
+    /**
+     * @var CACHENAME_SLIDER_KEY  The key of the cache used for storing slider data.
+     */
+    const CACHENAME_SLIDER_KEY = 'sliderkey';
 
     /**
      * Adds title to block instance.
@@ -81,8 +91,38 @@ class block_news_slider extends block_base {
 
         $this->content = new stdClass;
 
-        $newsblock = $this->get_courses_news();
-
+        if (!empty ($config->usecaching)) {
+            $cache = cache::make('block_news_slider', self::CACHENAME_SLIDER);
+    
+            $returnedcachedata = $cache->get(self::CACHENAME_SLIDER_KEY);
+            $cachedatastore = array();  // Use this to write data to cache in array format, ['lastaccess'] = last access time, ['data'] = actual data.
+    
+            $usercachettl = $config->cachingttl;
+            $totalusertime = $returnedcachedata['lastaccess'] + $usercachettl;
+            $timenow = time();
+    
+            // If no data retrieved.
+            if ($returnedcachedata === false) {
+                $cachedatastore['data'] = $this->get_courses_news();
+                
+            } elseif ( $timenow > $totalusertime) {
+                $cachedatastore['data'] = $this->get_courses_news();
+                
+            } else {
+                $cachedatastore['data'] = $returnedcachedata['data'];  // Means we have got valid slider data from cache.
+            }
+    
+            // Now timestamp the cache with last access time.  In effect always write last access time (plus cache data) to cache 
+            $cachedatastore['lastaccess'] = time();
+            $cache->set(self::CACHENAME_SLIDER_KEY, $cachedatastore);
+    
+            $newsblock = $cachedatastore['data'];
+        } else {
+            
+            $newsblock = $this->get_courses_news();
+        }
+        
+        
         $newscontentjson = new stdClass();
 
         if (!empty ($this->config->bannertitle)) {
