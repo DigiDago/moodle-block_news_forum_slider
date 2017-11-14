@@ -95,33 +95,35 @@ class block_news_slider extends block_base {
             $cache = cache::make('block_news_slider', self::CACHENAME_SLIDER);
     
             $returnedcachedata = $cache->get(self::CACHENAME_SLIDER_KEY);
-            $cachedatastore = array();  // Use this to write data to cache in array format, ['lastaccess'] = last access time, ['data'] = actual data.
+            $cachedatastore = array();  // Use this to write data to cache in array format, ['lastbuildtime'] = last access time, ['data'] = actual data.
     
             $usercachettl = $config->cachingttl;
-            $totalusertime = $returnedcachedata['lastaccess'] + $usercachettl;
+
             $timenow = time();
     
-            // If no data retrieved.
-            if ($returnedcachedata === false) {
+            if ($returnedcachedata === false) { // If no data retrieved.
+
                 $cachedatastore['data'] = $this->get_courses_news();
-                
-            } elseif ( $timenow > $totalusertime) {
+                $cachedatastore['lastbuildtime'] = time();
+                $cache->set(self::CACHENAME_SLIDER_KEY, $cachedatastore);
+
+            } elseif ( $timenow > ($returnedcachedata['lastbuildtime'] + $usercachettl)) { // If user's last cache has expired since it was last built.
+
                 $cachedatastore['data'] = $this->get_courses_news();
-                
+
+                // Now timestamp the cache with last build time.
+                $cachedatastore['lastbuildtime'] = $timenow;
+                $cache->set(self::CACHENAME_SLIDER_KEY, $cachedatastore);
+
             } else {
-                $cachedatastore['data'] = $returnedcachedata['data'];  // Means we have got valid slider data from cache.
+                $cachedatastore['data'] = $returnedcachedata['data'];  // We got valid, non-expired data from cache.
             }
-    
-            // Now timestamp the cache with last access time.  In effect always write last access time (plus cache data) to cache 
-            $cachedatastore['lastaccess'] = time();
-            $cache->set(self::CACHENAME_SLIDER_KEY, $cachedatastore);
-    
+
             $newsblock = $cachedatastore['data'];
+
         } else {
-            
             $newsblock = $this->get_courses_news();
         }
-        
         
         $newscontentjson = new stdClass();
 
