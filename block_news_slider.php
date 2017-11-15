@@ -322,9 +322,17 @@ class block_news_slider extends block_base {
             }
             $shortnewsmessage = '<a href="' . $newslink . '">' . $shortnewsmessage . ' </a>';
 
+            // Shortname check.  If course announcement, add as link to course.
+            $courseshortname = "Site Announcement";
+            if ($course->id != $SITE->id) {
+                $courselink = new moodle_url('/course/view.php', array('id' => $course->id));
+                $courseshortname = '<a href="' . $courselink . '" title="View ' . $course->shortname . '">';
+                $courseshortname .= '<strong> ' . $course->shortname . '</strong></a>';
+            }
+
             $returnedcoursenews[] = array('headline'  => $headline,
                     'author'          => ', by ' . $news['author'],
-                    'courseshortname' => ($course->id == $SITE->id) ? "Site Announcement" : $course->shortname,
+                    'courseshortname' => $courseshortname,
                     'message'         => $newsmessage,
                     'shortmessage'    => $shortnewsmessage,
                     'userdayofdate'   => date('l', $news['modified']) . ',',
