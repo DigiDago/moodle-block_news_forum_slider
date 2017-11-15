@@ -30,7 +30,7 @@
 }
 }}
 
-<div style="height: 135px;">
+<div id="slider-container">
 
     <div class="slider-banner-col" style="height: 100%">
             <span>{{title}}</span>
@@ -58,8 +58,3 @@
     </div>
 
 </div>
-{{#js}}
-require(['block_news_slider/slider'], function(mod) {
-    mod.init();
-});
-{{/js}}

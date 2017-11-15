@@ -91,42 +91,59 @@ class block_news_slider extends block_base {
 
         $this->content = new stdClass;
 
+        $PAGE->requires->css('/blocks/news_slider/slick/slick.css');
+        $PAGE->requires->css('/blocks/news_slider/slick/slick-theme.css');
+
+        $newscontent = "";  // Used to store news content.
+
         if (!empty ($config->usecaching)) {
             $cache = cache::make('block_news_slider', self::CACHENAME_SLIDER);
-    
+
             $returnedcachedata = $cache->get(self::CACHENAME_SLIDER_KEY);
-            $cachedatastore = array();  // Use this to write data to cache in array format, ['lastcachebuildtime'] = last access time, ['data'] = actual data.
-    
+
+            // Use this to write data to cache in array format, ['lastcachebuildtime'] = last access time, ['data'] = actual data.
+            $cachedatastore = array();
+
             $usercachettl = $config->cachingttl;
 
             $timenow = time();
 
-            if ( ($returnedcachedata === false) || (!isset($returnedcachedata['lastcachebuildtime'])) ) { // If no data retrieved or lastcachebuildtime has no value.
-                $cachedatastore['data'] = $this->get_courses_news();
-                $cachedatastore['lastcachebuildtime'] = time();
-                $cache->set(self::CACHENAME_SLIDER_KEY, $cachedatastore);
+            // If no data retrieved or lastcachebuildtime has no value.
+            // Or if user's last cache has expired since it was last built.
+            if ( ($returnedcachedata === false) || (!isset($returnedcachedata['lastcachebuildtime'])) ||
+                ( $timenow > ($returnedcachedata['lastcachebuildtime'] + $usercachettl)) ) {
 
-
-            } else if ( $timenow > ($returnedcachedata['lastcachebuildtime'] + $usercachettl)) { // If user's last cache has expired since it was last built.
-                
-                $cachedatastore['data'] = $this->get_courses_news();
+                $cachedatastore['data'] = self::build_news();
 
                 // Now timestamp the cache with last build time.
-                $cachedatastore['lastcachebuildtime'] = $timenow;
+                $cachedatastore['lastcachebuildtime'] = time();
                 $cache->set(self::CACHENAME_SLIDER_KEY, $cachedatastore);
-
             } else {
                 $cachedatastore['data'] = $returnedcachedata['data'];  // We got valid, non-expired data from cache.
             }
-    
-            $newsblock = $cachedatastore['data'];
+
+            $newscontent = $cachedatastore['data'];
 
         } else {
-            echo "Not using cache";
-            $newsblock = $this->get_courses_news();
+            $newscontent = self::build_news();
         }
-        
-        
+
+        $PAGE->requires->js_call_amd('block_news_slider/slider', 'init');
+        $this->content->text = html_writer::tag('div', $newscontent);
+
+        return $this->content;
+    }
+
+    /**
+     * Main function to control building news items and return html formatted content.
+     *
+     * @return array HTML formatted news content
+     */
+    private function build_news() {
+        global $OUTPUT;
+
+        $newsblock = $this->get_courses_news();
+
         $newscontentjson = new stdClass();
 
         if (!empty ($this->config->bannertitle)) {
@@ -137,15 +154,8 @@ class block_news_slider extends block_base {
 
         $newscontentjson->news = array_values($newsblock);
 
-        $PAGE->requires->css('/blocks/news_slider/slick/slick.css');
-        $PAGE->requires->css('/blocks/news_slider/slick/slick-theme.css');
-
         $newscontentfinal = $OUTPUT->render_from_template('block_news_slider/slider', $newscontentjson);
-
-        $this->content->text = html_writer::tag('div',
-                $newscontentfinal);
-
-        return $this->content;
+        return $newscontentfinal;
     }
 
     /**
