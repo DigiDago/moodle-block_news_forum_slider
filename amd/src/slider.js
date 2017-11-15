@@ -6,11 +6,11 @@ define(['jquery', 'block_news_slider/slick', 'theme_bootstrapbase/bootstrap', 'c
     log.debug('news_slider slider.js function called');
 
     return {
-        init: function() {
+        init: function(showdots) {
             $(document).ready(function($) {
 
                 $('.responsive').slick({
-                    dots: true,
+                    dots: showdots,
                     speed: 300,
                     slidesToShow: 1,
                     slidesToScroll: 1,

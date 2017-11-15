@@ -69,5 +69,9 @@ class block_news_slider_edit_form extends block_edit_form {
         $mform->addElement('selectyesno', 'config_showoldnews', get_string('showoldnews', 'block_news_slider'));
         $mform->setDefault('config_showoldnews', 0);
 
+        // Show slick dot navigation (bullets) on bottom.
+        $mform->addElement('selectyesno', 'config_showdots', get_string('showdots', 'block_news_slider'));
+        $mform->setDefault('config_showdots', 1);
+
     }
 }

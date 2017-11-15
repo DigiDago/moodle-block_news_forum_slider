@@ -128,7 +128,9 @@ class block_news_slider extends block_base {
             $newscontent = self::build_news();
         }
 
-        $PAGE->requires->js_call_amd('block_news_slider/slider', 'init');
+        $showdots = (!empty($this->config->showdots) && ($this->config->showdots == true)) ? true : false;
+
+        $PAGE->requires->js_call_amd('block_news_slider/slider', 'init', array($showdots));
         $this->content->text = html_writer::tag('div', $newscontent);
 
         return $this->content;
@@ -153,6 +155,12 @@ class block_news_slider extends block_base {
         }
 
         $newscontentjson->news = array_values($newsblock);
+
+        if (!empty($this->config->showdots) && ($this->config->showdots == true)) {
+            $newscontentjson->slidercontainerstyles = '';
+        } else {
+            $newscontentjson->slidercontainerstyles = ' style="height: 125px;" ';
+        }
 
         $newscontentfinal = $OUTPUT->render_from_template('block_news_slider/slider', $newscontentjson);
         return $newscontentfinal;
@@ -315,7 +323,7 @@ class block_news_slider extends block_base {
 
             // For small screen displays, prepare a shorter version of news message, regardless
             // of excerpt length config.
-            $shortnewsexcerptlength = 70;
+            $shortnewsexcerptlength = 50;
             $shortnewsmessage = news_slider_truncate_news(strip_tags($news['message']), $shortnewsexcerptlength, ' .. ');
             if (strstr ($shortnewsmessage, ' .. ')) {
                 $shortnewsmessage .= $readmorelink;
