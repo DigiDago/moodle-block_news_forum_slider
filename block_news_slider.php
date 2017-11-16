@@ -96,7 +96,8 @@ class block_news_slider extends block_base {
 
         $newscontent = "";  // Used to store news content.
 
-        if (!empty ($config->usecaching)) {
+        // Check if caching is being used.  Caching doesn't apply to course page slider.
+        if ( (!empty ($config->usecaching) && ($COURSE->id <= 1) ) ) {
             $cache = cache::make('block_news_slider', self::CACHENAME_SLIDER);
 
             $returnedcachedata = $cache->get(self::CACHENAME_SLIDER_KEY);
@@ -172,7 +173,7 @@ class block_news_slider extends block_base {
      * @return array An array of news posts
      */
     private function get_courses_news() {
-        global $COURSE, $USER, $OUTPUT, $CFG, $SITE;
+        global $COURSE, $USER, $OUTPUT, $CFG, $SITE, $PAGE;
 
         // Get all courses news.
         $allcourses = enrol_get_my_courses('id, shortname', 'visible DESC,sortorder ASC');
@@ -218,22 +219,30 @@ class block_news_slider extends block_base {
 
         $newscontent = array();
 
-        if ( ($newstype == $this::DISPLAY_MODE_ALL_NEWS) || ($newstype == $this::DISPLAY_MODE_COURSE_NEWS) ) {
-            foreach ($allcourses as $course) {
-                $tempnews = news_slider_get_course_news($course);
-                if (!empty($tempnews)) {
-                    $this->format_course_news_items ($course, $tempnews, $coursenews);
-                }
-
-            } // End foreach.
-        }
-
-        // Get site news.
-        if ( ($newstype == $this::DISPLAY_MODE_ALL_NEWS) || ($newstype == $this::DISPLAY_MODE_SITE_NEWS) ) {
-            global $SITE;
-            $tempnews = news_slider_get_course_news($SITE, true, $sliderconfig);
+        // First check if we're on a course page. If so, only get posts for that course.
+        if ($COURSE->id > 1) {
+            $tempnews = news_slider_get_course_news($COURSE);
             if (!empty($tempnews)) {
-                $this->format_course_news_items ($SITE, $tempnews, $coursenews);
+                $this->format_course_news_items ($COURSE, $tempnews, $coursenews);
+            }
+        } else {
+            if ( ($newstype == $this::DISPLAY_MODE_ALL_NEWS) || ($newstype == $this::DISPLAY_MODE_COURSE_NEWS) ) {
+                foreach ($allcourses as $course) {
+                    $tempnews = news_slider_get_course_news($course);
+                    if (!empty($tempnews)) {
+                        $this->format_course_news_items ($course, $tempnews, $coursenews);
+                    }
+
+                } // End foreach.
+            }
+
+            // Get site news.
+            if ( ($newstype == $this::DISPLAY_MODE_ALL_NEWS) || ($newstype == $this::DISPLAY_MODE_SITE_NEWS) ) {
+                global $SITE;
+                $tempnews = news_slider_get_course_news($SITE, true, $sliderconfig);
+                if (!empty($tempnews)) {
+                    $this->format_course_news_items ($SITE, $tempnews, $coursenews);
+                }
             }
         }
 
