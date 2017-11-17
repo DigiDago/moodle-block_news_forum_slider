@@ -129,8 +129,13 @@ class block_news_slider extends block_base {
             $newscontent = self::build_news();
         }
 
-        $showdots = (!empty($this->config->showdots) && ($this->config->showdots == true)) ? true : false;
-
+        if (!empty($this->config->showdots) && ($this->config->showdots == true)) {
+            $showdots = true;
+        } else if (!isset ($this->config->showdots)) {  // Check config setting is recognised.
+            $showdots = true;
+        } else {
+            $showdots = false;
+        }
         $PAGE->requires->js_call_amd('block_news_slider/slider', 'init', array($showdots));
         $this->content->text = html_writer::tag('div', $newscontent);
 
@@ -158,9 +163,11 @@ class block_news_slider extends block_base {
         $newscontentjson->news = array_values($newsblock);
 
         if (!empty($this->config->showdots) && ($this->config->showdots == true)) {
-            $newscontentjson->slidercontainerstyles = '';
-        } else {
             $newscontentjson->slidercontainerstyles = ' style="height: 125px;" ';
+        } else if (!isset ($this->config->showdots)) {  // Check config setting is recognised.
+            $newscontentjson->slidercontainerstyles = ' style="height: 125px;" ';
+        } else {
+            $newscontentjson->slidercontainerstyles = '';
         }
 
         $newscontentfinal = $OUTPUT->render_from_template('block_news_slider/slider', $newscontentjson);
@@ -226,6 +233,7 @@ class block_news_slider extends block_base {
                 $this->format_course_news_items ($COURSE, $tempnews, $coursenews);
             }
         } else {
+
             if ( ($newstype == $this::DISPLAY_MODE_ALL_NEWS) || ($newstype == $this::DISPLAY_MODE_COURSE_NEWS) ) {
                 foreach ($allcourses as $course) {
                     $tempnews = news_slider_get_course_news($course);
@@ -252,9 +260,11 @@ class block_news_slider extends block_base {
             );
         } else {
             // Sort course news items.
+
+            // Sory by pinned posts and date by creating sort keys.
             foreach ($coursenews as $key => $row) {
                 // Replace 0 with the field's index/key.
-                $dates[$key]  = $row['datemodified'];
+                $dates[$key]  = $row['pinned'] . $row['datemodified'];
             }
             array_multisort($dates, SORT_DESC, $coursenews);
 
@@ -268,7 +278,7 @@ class block_news_slider extends block_base {
      *
      * @param stdClass $course The course from which to get the news items for the current user
      * @param array    $newsitems Array of news items to format
-     * @param array    $returnedcoursenews The array to which to formatted news items
+     * @param array    $returnedcoursenews The array to populate with formatted news items
      *
      * @return None
      *
@@ -288,6 +298,10 @@ class block_news_slider extends block_base {
 
             if (strlen($subject) > $subjectmaxlength) {
                 $subject = preg_replace('/\s+?(\S+)?$/', '', substr($subject, 0, $subjectmaxlength)) . " ... ";
+            }
+
+            if (!empty($news['pinned'])) {
+                $subject = $news['pinned'] . ' ' . $subject;
             }
 
             $headline = html_writer::tag('div', html_writer::link(new moodle_url('/mod/forum/discuss.php',
@@ -348,17 +362,18 @@ class block_news_slider extends block_base {
             }
 
             $returnedcoursenews[] = array('headline'  => $headline,
-                    'author'          => ', by ' . $news['author'],
-                    'courseshortname' => $courseshortname,
-                    'message'         => $newsmessage,
-                    'shortmessage'    => $shortnewsmessage,
-                    'userdayofdate'   => date('l', $news['modified']) . ',',
-                    'datemodified'    => $news['modified'],
-                    'userdatemodified'        => date('d/m/Y', $news['modified']),
-                    'userid'          => $news['userid'],
-                    'userpicture'     => $news['userpicture'],
-                    'link'            => $newslink,
-                    'profilelink'     => new moodle_url('/user/view.php', array('id' => $news['userid'], 'course' => $course->id))
+                    'author'           => ', by ' . $news['author'],
+                    'courseshortname'  => $courseshortname,
+                    'message'          => $newsmessage,
+                    'shortmessage'     => $shortnewsmessage,
+                    'userdayofdate'    => date('l', $news['modified']) . ',',
+                    'datemodified'     => $news['modified'],
+                    'pinned'           => $news['pinned'],
+                    'userdatemodified' => date('d/m/Y', $news['modified']),
+                    'userid'           => $news['userid'],
+                    'userpicture'      => $news['userpicture'],
+                    'link'             => $newslink,
+                    'profilelink'      => new moodle_url('/user/view.php', array('id' => $news['userid'], 'course' => $course->id))
             );
 
         }

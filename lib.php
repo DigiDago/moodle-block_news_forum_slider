@@ -49,7 +49,7 @@ $defaultblocksettings = array(
  * @return array List of news items to show
  */
 function news_slider_get_course_news($course, $getsitenews = false, $sliderconfig = null) {
-    global $USER, $OUTPUT;
+    global $USER, $OUTPUT, $COURSE;
 
     $posttext = '';
 
@@ -84,6 +84,12 @@ function news_slider_get_course_news($course, $getsitenews = false, $sliderconfi
         }
     }
 
+    // If this is a site page, do not pin course posts.
+    $getpinnedposts = true;
+    if ( ($COURSE->id <= 1) && ($course->id > 1) ) {
+        $getpinnedposts = false;
+    }
+
     foreach ($discussions as $discussion) {
 
         // Check for unread news items only if not retrieving site news.
@@ -112,9 +118,20 @@ function news_slider_get_course_news($course, $getsitenews = false, $sliderconfi
         $newsitems[$discussion->id]['author'] = $discussion->firstname . ' ' . $discussion->lastname;
         $newsitems[$discussion->id]['subject'] = $discussion->subject;
         $newsitems[$discussion->id]['message'] = $discussion->message;
+        $newsitems[$discussion->id]['pinned'] = ( ($COURSE->id <= 1) && ($course->id > 1) ) ? "" : $discussion->pinned;
         $newsitems[$discussion->id]['userdate'] = userdate($discussion->modified, $strftimerecent);
         $newsitems[$discussion->id]['userid'] = $discussion->userid;
         $newsitems[$discussion->id]['userpicture'] = $userpicture;
+
+        // Check if message is pinned.
+        if ($getpinnedposts == true) {
+            if (FORUM_DISCUSSION_PINNED == $discussion->pinned) {
+                $newsitems[$discussion->id]['pinned'] = $OUTPUT->pix_icon('i/pinned', get_string('discussionpinned', 'forum'),
+                    'mod_forum', array ('style' => ' display: inline-block; vertical-align: middle;'));
+            } else {
+                $newsitems[$discussion->id]['pinned'] = "";
+            }
+        }
 
         $posttext .= $discussion->subject;
         $posttext .= userdate($discussion->modified, $strftimerecent);
