@@ -32,6 +32,8 @@ See basic instructions below:
 1. Add the news slider to the "Course slider" block region that can be seen by admins on the frontpage.  Configure it to appear on all pages.
 2. Go to any course page. You should the news slider appear just above course content. Now configure this block to appear only on course pages.
 
+# Version number #
+
 Version 1.2 (2017111500)
 
 ### How do I get set up? ###
