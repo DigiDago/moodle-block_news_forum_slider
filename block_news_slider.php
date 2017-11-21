@@ -129,6 +129,11 @@ class block_news_slider extends block_base {
             $newscontent = self::build_news();
         }
 
+        // If no news content, do not display slider.
+        if (empty ($newscontent)) {
+            return '';
+        }
+
         if (!empty($this->config->showdots) && ($this->config->showdots == true)) {
             $showdots = true;
         } else if (!isset ($this->config->showdots)) {  // Check config setting is recognised.
@@ -152,6 +157,9 @@ class block_news_slider extends block_base {
 
         $newsblock = $this->get_courses_news();
 
+        if (empty ($newsblock)) {
+            return '';
+        }
         $newscontentjson = new stdClass();
 
         if (!empty ($this->config->bannertitle)) {
@@ -255,9 +263,8 @@ class block_news_slider extends block_base {
         }
 
         if (empty($coursenews)) {
-            $coursenews[] = array(
-                    'message' => get_string('nonewsitems', 'block_news_slider')
-            );
+            $coursenews = array();
+
         } else {
             // Sort course news items.
 
