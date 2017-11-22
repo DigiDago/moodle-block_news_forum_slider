@@ -82,11 +82,54 @@ class block_news_slider extends block_base {
      * Calls functions to load js and css and returns block instance content.
      */
     public function get_content() {
-        global $COURSE, $USER, $OUTPUT, $PAGE;
+        global $COURSE, $USER, $OUTPUT, $PAGE, $ME;
 
         $config = get_config("block_news_slider");
         if ($this->content !== null) {
             return $this->content;
+        }
+
+        //
+        // Check if this is a valid page to display block on.  Must be either the dashboard, homepage or a course page.
+        //
+        $displayblock = false;
+
+        // Check if we are on dashboard page or front page.
+        if (($PAGE->pagetype == 'site-index') || ($PAGE->pagetype == 'my-index')) {
+            $displayblock = true;
+
+        } else {
+
+            // Check for general course page first.
+            $url = null;
+
+            // Check if $PAGE->url is set.  It should be, but also using a fallback.
+            if ($PAGE->has_set_url()) {
+                $url = $PAGE->url;
+            } else if ($ME !== null) {
+                $url = new moodle_url(str_ireplace('/index.php', '/', $ME));
+            }
+
+            // In practice, $url should always be valid.
+            if ($url !== null) {
+
+                // Check if this is the course view page.
+                if (strstr ($url->raw_out(), 'course/view.php')) {
+
+                    // Check url paramaters.  Count should be 1 if course home page.
+                    // Checking that section param doesn't exist as an extra.
+                    $urlparams = $url->params();
+
+                    if ((count ($urlparams) == 1) && (!array_key_exists('section', $urlparams))) {
+                        $displayblock = true;
+                    }
+                }
+            }
+        }
+
+        if ($displayblock == false) {
+            return '';
+
         }
 
         $this->content = new stdClass;
