@@ -65,6 +65,14 @@ class block_news_slider_edit_form extends block_edit_form {
         $mform->setDefault('config_siteitemsperiod', block_news_slider::NEWS_SLIDER_DEFAULT_SITE_NEWS_PERIOD);
         $mform->setType('config_siteitemsperiod', PARAM_TEXT);
 
+        $mform->addElement('text', 'config_courseitemstoshow', get_string('courseitemstoshow', 'block_news_slider'));
+        $mform->setDefault('config_courseitemstoshow', block_news_slider::NEWS_SLIDER_DEFAULT_COURSE_NEWS_ITEMS);
+        $mform->setType('config_courseitemstoshow', PARAM_TEXT);
+
+        $mform->addElement('text', 'config_courseitemsperiod', get_string('courseitemsperiod', 'block_news_slider'));
+        $mform->setDefault('config_courseitemsperiod', block_news_slider::NEWS_SLIDER_DEFAULT_COURSE_NEWS_PERIOD);
+        $mform->setType('config_courseitemsperiod', PARAM_TEXT);
+
         // Show old site news link yes / no option.
         $mform->addElement('selectyesno', 'config_showoldnews', get_string('showoldnews', 'block_news_slider'));
         $mform->setDefault('config_showoldnews', 0);

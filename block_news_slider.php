@@ -55,6 +55,12 @@ class block_news_slider extends block_base {
     /** @var int Default site news period to show */
     const NEWS_SLIDER_DEFAULT_SITE_NEWS_PERIOD = 7; // In days.
 
+    /** @var int Default course items to show */
+    const NEWS_SLIDER_DEFAULT_COURSE_NEWS_ITEMS = 4;
+
+    /** @var int Default course news period to show */
+    const NEWS_SLIDER_DEFAULT_COURSE_NEWS_PERIOD = 7; // In days.
+
     /** @var string Default left banner title */
     const NEWS_SLIDER_DEFAULT_TITLE_BANNER = "Latest News";
 
@@ -269,6 +275,18 @@ class block_news_slider extends block_base {
             $sliderconfig->siteitemsperiod = $this::NEWS_SLIDER_DEFAULT_SITE_NEWS_PERIOD;
         }
 
+        if (!empty($this->config->courseitemstoshow)) {
+            $sliderconfig->courseitemstoshow = $this->config->courseitemstoshow;
+        } else {
+            $sliderconfig->courseitemstoshow = $this::NEWS_SLIDER_DEFAULT_COURSE_NEWS_ITEMS;
+        }
+
+        if (!empty($this->config->courseitemsperiod)) {
+            $sliderconfig->courseitemsperiod = $this->config->courseitemsperiod;
+        } else {
+            $sliderconfig->courseitemsperiod = $this::NEWS_SLIDER_DEFAULT_COURSE_NEWS_PERIOD;
+        }
+
         $newsblock = new stdClass;
         $newsblock->headlines = array();
         $newsblock->newsitems = array();
@@ -279,7 +297,7 @@ class block_news_slider extends block_base {
 
         // First check if we're on a course page. If so, only get posts for that course.
         if ($COURSE->id > 1) {
-            $tempnews = news_slider_get_course_news($COURSE);
+            $tempnews = news_slider_get_course_news($COURSE, false, $sliderconfig);
             if (!empty($tempnews)) {
                 $this->format_course_news_items ($COURSE, $tempnews, $coursenews);
             }
@@ -287,7 +305,7 @@ class block_news_slider extends block_base {
 
             if ( ($newstype == $this::DISPLAY_MODE_ALL_NEWS) || ($newstype == $this::DISPLAY_MODE_COURSE_NEWS) ) {
                 foreach ($allcourses as $course) {
-                    $tempnews = news_slider_get_course_news($course);
+                    $tempnews = news_slider_get_course_news($course, false, $sliderconfig);
                     if (!empty($tempnews)) {
                         $this->format_course_news_items ($course, $tempnews, $coursenews);
                     }
