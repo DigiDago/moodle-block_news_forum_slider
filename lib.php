@@ -71,20 +71,13 @@ function news_slider_get_course_news($course, $getsitenews = false, $sliderconfi
     } else {
         $totalpoststoshow = $sliderconfig->courseitemstoshow;
         $postsupdatedsince = $sliderconfig->courseitemsperiod * 86400;
+        $postsupdatedsince = time() - $postsupdatedsince;
         $newsforum = forum_get_course_forum($course->id, 'news');
         $cm = get_coursemodule_from_instance('forum', $newsforum->id, $newsforum->course);
         $discussions = forum_get_discussions($cm, "", true, null, $totalpoststoshow, null, null, null, null, $postsupdatedsince);
     }
 
     $strftimerecent = get_string('strftimerecent');
-
-    // Do not get unread items if displaying site news.
-    /* if (!$getsitenews) {
-        $notread = forum_get_discussions_unread($cm);
-        if (count($notread) < 1) {
-            $discussions = array();
-        }
-    } */
 
     // If this is a site page, do not pin course posts.
     $getpinnedposts = true;
@@ -93,13 +86,6 @@ function news_slider_get_course_news($course, $getsitenews = false, $sliderconfi
     }
 
     foreach ($discussions as $discussion) {
-
-        // Check for unread news items only if not retrieving site news.
-        /* if (!$getsitenews) {
-            if (empty($notread[$discussion->discussion])) {
-                continue;
-            }
-        } */
 
         // Get user profile picture.
 
