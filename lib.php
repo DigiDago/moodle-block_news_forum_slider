@@ -48,7 +48,7 @@ $defaultblocksettings = array(
  *
  * @return array List of news items to show
  */
-function news_slider_get_course_news($course, $getsitenews = false, $sliderconfig = null) {
+function news_slider_get_course_news($course, $getsitenews = false, $sliderconfig = null, &$currenttotalcoursesretrieved = null) {
     global $USER, $OUTPUT, $COURSE;
 
     $posttext = '';
@@ -67,14 +67,33 @@ function news_slider_get_course_news($course, $getsitenews = false, $sliderconfi
         $totalpoststoshow = $sliderconfig->siteitemstoshow;
         $postsupdatedsince = $sliderconfig->siteitemsperiod * 86400;
         $postsupdatedsince = time() - $postsupdatedsince;
+        $sort = forum_get_default_sort_order(true, 'p.modified', 'd', true); // Last parameter is to include pinned posts in sort order.
         $discussions = forum_get_discussions($cm, "", true, null, $totalpoststoshow, null, null, null, null, $postsupdatedsince);
     } else {
-        $totalpoststoshow = $sliderconfig->courseitemstoshow;
+        // Get course posts.
+
+        if ($currenttotalcoursesretrieved !== NULL) {
+            // If reached limit, retrieve no more (as used when this function is called consecutively for many courses).
+            if ($currenttotalcoursesretrieved == $sliderconfig->courseitemstoshow) {
+                    return array();
+            }
+            else {
+                $totalpoststoshow = $sliderconfig->courseitemstoshow - $currenttotalcoursesretrieved;
+            }
+        } else {
+            $totalpoststoshow = $sliderconfig->courseitemstoshow;
+        }
+
         $postsupdatedsince = $sliderconfig->courseitemsperiod * 86400;
         $postsupdatedsince = time() - $postsupdatedsince;
         $newsforum = forum_get_course_forum($course->id, 'news');
         $cm = get_coursemodule_from_instance('forum', $newsforum->id, $newsforum->course);
+
         $discussions = forum_get_discussions($cm, "", true, null, $totalpoststoshow, null, null, null, null, $postsupdatedsince);
+
+        if ($currenttotalcoursesretrieved !== NULL) {
+            $currenttotalcoursesretrieved += count($discussions);
+        }
     }
 
     $strftimerecent = get_string('strftimerecent');

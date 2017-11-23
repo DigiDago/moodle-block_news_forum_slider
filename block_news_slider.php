@@ -49,14 +49,14 @@ class block_news_slider extends block_base {
     /** @var int Display Mode Course news only */
     const DISPLAY_MODE_COURSE_NEWS = 3;
 
-    /** @var int Default site items to show */
+    /** @var int Default number of site items to show */
     const NEWS_SLIDER_DEFAULT_SITE_NEWS_ITEMS = 4;
 
     /** @var int Default site news period to show */
     const NEWS_SLIDER_DEFAULT_SITE_NEWS_PERIOD = 7; // In days.
 
-    /** @var int Default course items to show */
-    const NEWS_SLIDER_DEFAULT_COURSE_NEWS_ITEMS = 4;
+    /** @var int Default number of course items to show */
+    const NEWS_SLIDER_DEFAULT_COURSE_NEWS_ITEMS = 7;
 
     /** @var int Default course news period to show */
     const NEWS_SLIDER_DEFAULT_COURSE_NEWS_PERIOD = 7; // In days.
@@ -295,31 +295,34 @@ class block_news_slider extends block_base {
 
         $newscontent = array();
 
-        // First check if we're on a course page. If so, only get posts for that course.
-        if ($COURSE->id > 1) {
-            $tempnews = news_slider_get_course_news($COURSE, false, $sliderconfig);
-            if (!empty($tempnews)) {
-                $this->format_course_news_items ($COURSE, $tempnews, $coursenews);
-            }
-        } else {
+        // Get course news.
+        if ( ($newstype == $this::DISPLAY_MODE_ALL_NEWS) || ($newstype == $this::DISPLAY_MODE_COURSE_NEWS) ) {
 
-            if ( ($newstype == $this::DISPLAY_MODE_ALL_NEWS) || ($newstype == $this::DISPLAY_MODE_COURSE_NEWS) ) {
+            // First check if we're on a course page. If so, only get posts for that course.
+            if ($COURSE->id > 1) {
+                $tempnews = news_slider_get_course_news($COURSE, false, $sliderconfig);
+                if (!empty($tempnews)) {
+                    $this->format_course_news_items ($COURSE, $tempnews, $coursenews);
+                }
+            } else {
+                $currenttotalcoursesretrieved = 0;
                 foreach ($allcourses as $course) {
-                    $tempnews = news_slider_get_course_news($course, false, $sliderconfig);
+                    $tempnews = news_slider_get_course_news($course, false, $sliderconfig, $currenttotalcoursesretrieved);
                     if (!empty($tempnews)) {
                         $this->format_course_news_items ($course, $tempnews, $coursenews);
                     }
 
                 } // End foreach.
-            }
 
-            // Get site news.
-            if ( ($newstype == $this::DISPLAY_MODE_ALL_NEWS) || ($newstype == $this::DISPLAY_MODE_SITE_NEWS) ) {
-                global $SITE;
-                $tempnews = news_slider_get_course_news($SITE, true, $sliderconfig);
-                if (!empty($tempnews)) {
-                    $this->format_course_news_items ($SITE, $tempnews, $coursenews);
-                }
+            }
+        }
+
+        // Get site news.
+        if ( ($newstype == $this::DISPLAY_MODE_ALL_NEWS) || ($newstype == $this::DISPLAY_MODE_SITE_NEWS) ) {
+            global $SITE;
+            $tempnews = news_slider_get_course_news($SITE, true, $sliderconfig);
+            if (!empty($tempnews)) {
+                $this->format_course_news_items ($SITE, $tempnews, $coursenews);
             }
         }
 
