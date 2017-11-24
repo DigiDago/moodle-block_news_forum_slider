@@ -116,17 +116,23 @@ class block_news_slider extends block_base {
                 $url = new moodle_url(str_ireplace('/index.php', '/', $ME));
             }
 
+
+
             // In practice, $url should always be valid.
             if ($url !== null) {
-
                 // Check if this is the course view page.
                 if (strstr ($url->raw_out(), 'course/view.php')) {
 
+                    // Get raw querystring params from URL.
+                    $getparams = http_build_query($_GET);
+
                     // Check url paramaters.  Count should be 1 if course home page.
-                    // Checking that section param doesn't exist as an extra.
+                    // Checking that section param doesn't exist as an extra.  Also checking raw querystring defined
+                    // above.  This is due to section 0 not actually recording 'section' as a param.
                     $urlparams = $url->params();
 
-                    if ((count ($urlparams) == 1) && (!array_key_exists('section', $urlparams))) {
+                    if ((count ($urlparams) == 1) && (!array_key_exists('section', $urlparams)) &&
+                            (!strstr ($getparams, 'section=')) ) {
                         $displayblock = true;
                     }
                 }
