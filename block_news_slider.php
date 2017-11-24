@@ -116,8 +116,6 @@ class block_news_slider extends block_base {
                 $url = new moodle_url(str_ireplace('/index.php', '/', $ME));
             }
 
-
-
             // In practice, $url should always be valid.
             if ($url !== null) {
                 // Check if this is the course view page.

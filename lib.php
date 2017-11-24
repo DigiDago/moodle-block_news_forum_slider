@@ -67,17 +67,16 @@ function news_slider_get_course_news($course, $getsitenews = false, $sliderconfi
         $totalpoststoshow = $sliderconfig->siteitemstoshow;
         $postsupdatedsince = $sliderconfig->siteitemsperiod * 86400;
         $postsupdatedsince = time() - $postsupdatedsince;
-        $sort = forum_get_default_sort_order(true, 'p.modified', 'd', true); // Last parameter is to include pinned posts in sort order.
+        $sort = forum_get_default_sort_order(true, 'p.modified', 'd', true); // Last parameter set to true to include pinned posts.
         $discussions = forum_get_discussions($cm, "", true, null, $totalpoststoshow, null, null, null, null, $postsupdatedsince);
     } else {
         // Get course posts.
 
-        if ($currenttotalcoursesretrieved !== NULL) {
+        if ($currenttotalcoursesretrieved !== null) {
             // If reached limit, retrieve no more (as used when this function is called consecutively for many courses).
             if ($currenttotalcoursesretrieved == $sliderconfig->courseitemstoshow) {
                     return array();
-            }
-            else {
+            } else {
                 $totalpoststoshow = $sliderconfig->courseitemstoshow - $currenttotalcoursesretrieved;
             }
         } else {
@@ -91,7 +90,7 @@ function news_slider_get_course_news($course, $getsitenews = false, $sliderconfi
 
         $discussions = forum_get_discussions($cm, "", true, null, $totalpoststoshow, null, null, null, null, $postsupdatedsince);
 
-        if ($currenttotalcoursesretrieved !== NULL) {
+        if ($currenttotalcoursesretrieved !== null) {
             $currenttotalcoursesretrieved += count($discussions);
         }
     }
