@@ -34,7 +34,7 @@ See basic instructions below:
 
 # Version number #
 
-Version 1.2 (2017111500)
+Version 1.2 (2017121300)
 
 ### How do I get set up? ###
 
@@ -53,7 +53,7 @@ Adaptable Theme version 2017053100 (1.4+)
 
 ### Compatibility ###
 
-- Moodle 3.2, 3.3
+- Moodle 3.2, 3.3, 3.4
 - Adaptable version 1.4
 
 ### Contribution ###
