@@ -4,7 +4,6 @@ moodle-block_news_slider
 ### Moodle News Slider ###
 A news slider that displays unread course announcements and site announcements.  Can also be used on course pages to show unread announcements for that specific course.
 
-
 # General configuration #
 
 - Configurable max length of excerpt
@@ -14,8 +13,8 @@ A news slider that displays unread course announcements and site announcements. 
 # Per instance configuration  #
 
 - Option to display site news or course news or both
-- Maximum number of site announcements to display
-- Maximum period (in days) to show site announcements for
+- Maximum number of site / course announcements to display
+- Maximum period (in days) to show site / course announcements for
 - Display link to older news items
 - Show bullet (dots) navigation on bottom of slider
 
@@ -27,6 +26,7 @@ is switched on by default and set to expire every 5 minutes (300) for a user ses
 ## Using the slider on course pages ##
 
 There is custom block region on course pages in the Adaptable theme called "course page slider region", designed for use with the news slider.  
+
 See basic instructions below:
 
 1. Add the news slider to the "Course slider" block region that can be seen by admins on the frontpage.  Configure it to appear on all pages.
@@ -34,7 +34,7 @@ See basic instructions below:
 
 # Version number #
 
-Version 1.2 (2017121300)
+Version 1.3 (2017122200)
 
 ### How do I get set up? ###
 
