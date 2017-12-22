@@ -9,7 +9,7 @@ define(['jquery', 'block_news_slider/slick', 'theme_bootstrapbase/bootstrap', 'c
         init: function(showdots) {
             $(document).ready(function($) {
 
-                $('.responsive').slick({
+                $('.responsive').not('.slick-initialized').slick({
                     dots: showdots,
                     speed: 300,
                     slidesToShow: 1,

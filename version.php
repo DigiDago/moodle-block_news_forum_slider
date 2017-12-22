@@ -30,7 +30,7 @@ defined('MOODLE_INTERNAL') || die();
 $plugin->component = 'block_news_slider';
 
 // YYYYMMDDHH (year, month, day, 24-hr time).
-$plugin->version = 2017121300;
+$plugin->version = 2017122200;
 
 // YYYYMMDDHH (This is the release version for Moodle 3.2).
 $plugin->requires = 2016120500;
@@ -38,4 +38,4 @@ $plugin->requires = 2016120500;
 $plugin->dependencies = array('theme_adaptable' => 2017053100);
 
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = "1.2";
+$plugin->release = "1.3";
