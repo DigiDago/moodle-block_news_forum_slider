@@ -7,3 +7,7 @@
     max-width: 1250px;
     margin: auto;
 }
+
+.flex-grow-1 {
+    width: 100%;
+}

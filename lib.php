@@ -17,7 +17,7 @@
 /**
  * News slider block helper functions and callbacks.
  *
- * @package block_news_slider
+ * @package block_news_forum_slider
  * @copyright 2017 Manoj Solanki (Coventry University)
  * @copyright 2017 John Tutchings (Coventry University)
  * @copyright 2018 DigiDago
@@ -30,13 +30,13 @@ defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->dirroot . "/mod/forum/lib.php");
 
-define('NEWS_SLIDER_EXCERPT_LENGTH', 110);
-define('NEWS_SLIDER_SUBJECT_MAX_LENGTH', 30);
-define('NEWS_SLIDER_CACHING_TTL', 300);
+define('NEWS_FORUM_SLIDER_EXCERPT_LENGTH', 110);
+define('NEWS_FORUM_SLIDER_SUBJECT_MAX_LENGTH', 30);
+define('NEWS_FORUM_SLIDER_CACHING_TTL', 300);
 
 $defaultblocksettings = array(
-        'excerptlength' => NEWS_SLIDER_EXCERPT_LENGTH,
-        'subjectmaxlength' => NEWS_SLIDER_SUBJECT_MAX_LENGTH
+    'excerptlength' => NEWS_FORUM_SLIDER_EXCERPT_LENGTH,
+    'subjectmaxlength' => NEWS_FORUM_SLIDER_SUBJECT_MAX_LENGTH
 );
 
 /**
@@ -51,7 +51,8 @@ $defaultblocksettings = array(
  * @throws coding_exception
  * @throws moodle_exception
  */
-function news_slider_get_course_news($course, $getsitenews = false, $sliderconfig = null, &$currenttotalcoursesretrieved = null) {
+function news_forum_slider_get_course_news($course, $getsitenews = false, $sliderconfig = null, &$currenttotalcoursesretrieved = null)
+{
     global $OUTPUT, $COURSE;
 
     $posttext = '';
@@ -62,7 +63,7 @@ function news_slider_get_course_news($course, $getsitenews = false, $sliderconfi
     if ($getsitenews) {
         global $SITE;
 
-        if (! $newsforum = forum_get_course_forum($SITE->id, 'general')) {
+        if (!$newsforum = forum_get_course_forum($SITE->id, 'general')) {
             return $newsitems;
         }
         $cm = get_coursemodule_from_instance('forum', $newsforum->id, $SITE->id, false, MUST_EXIST);
@@ -77,7 +78,7 @@ function news_slider_get_course_news($course, $getsitenews = false, $sliderconfi
         if ($currenttotalcoursesretrieved !== null) {
             // If reached limit, retrieve no more (as used when this function is called consecutively for many courses).
             if ($currenttotalcoursesretrieved == $sliderconfig->courseitemstoshow) {
-                    return array();
+                return array();
             } else {
                 $totalpoststoshow = $sliderconfig->courseitemstoshow - $currenttotalcoursesretrieved;
             }
@@ -101,7 +102,7 @@ function news_slider_get_course_news($course, $getsitenews = false, $sliderconfi
 
     // If this is a site page, do not pin course posts.
     $getpinnedposts = true;
-    if ( ($COURSE->id <= 1) && ($course->id > 1) ) {
+    if (($COURSE->id <= 1) && ($course->id > 1)) {
         $getpinnedposts = false;
     }
 
@@ -114,7 +115,7 @@ function news_slider_get_course_news($course, $getsitenews = false, $sliderconfi
         $postuserfields = explode(',', user_picture::fields());
         $postuser = username_load_fields_from_object($postuser, $discussion, null, $postuserfields);
         $postuser->id = $discussion->userid;
-        $postuser->fullname    = $discussion->firstname . ' ' . $discussion->lastname;
+        $postuser->fullname = $discussion->firstname . ' ' . $discussion->lastname;
         $postuser->profilelink = new moodle_url('/user/view.php', array('id' => $discussion->userid, 'course' => $course->id));
 
         $userpicture = $OUTPUT->user_picture($postuser, array('courseid' => $course->id, 'size' => 80));
@@ -126,7 +127,7 @@ function news_slider_get_course_news($course, $getsitenews = false, $sliderconfi
         $newsitems[$discussion->id]['author'] = $discussion->firstname . ' ' . $discussion->lastname;
         $newsitems[$discussion->id]['subject'] = $discussion->subject;
         $newsitems[$discussion->id]['message'] = $discussion->message;
-        $newsitems[$discussion->id]['pinned'] = ( ($COURSE->id <= 1) && ($course->id > 1) ) ? "" : $discussion->pinned;
+        $newsitems[$discussion->id]['pinned'] = (($COURSE->id <= 1) && ($course->id > 1)) ? "" : $discussion->pinned;
         $newsitems[$discussion->id]['userdate'] = userdate($discussion->modified, $strftimerecent);
         $newsitems[$discussion->id]['userid'] = $discussion->userid;
         $newsitems[$discussion->id]['userpicture'] = $userpicture;
@@ -135,7 +136,7 @@ function news_slider_get_course_news($course, $getsitenews = false, $sliderconfi
         if ($getpinnedposts == true) {
             if (FORUM_DISCUSSION_PINNED == $discussion->pinned) {
                 $newsitems[$discussion->id]['pinned'] = $OUTPUT->pix_icon('i/pinned', get_string('discussionpinned', 'forum'),
-                    'mod_forum', array ('style' => ' display: inline-block; vertical-align: middle;'));
+                    'mod_forum', array('style' => ' display: inline-block; vertical-align: middle;'));
             } else {
                 $newsitems[$discussion->id]['pinned'] = "";
             }
@@ -158,7 +159,8 @@ function news_slider_get_course_news($course, $getsitenews = false, $sliderconfi
  * @param bool $considerhtml If the html make up tages should be ignored in the length to trim the text down to.
  * @return string
  */
-function news_slider_truncate_news($text, $length = 100, $ending = '...', $exact = false, $considerhtml = true) {
+function news_forum_slider_truncate_news($text, $length = 100, $ending = '...', $exact = false, $considerhtml = true)
+{
     if ($considerhtml) {
         // If the plain text is shorter than the maximum length, return the whole text.
         if (strlen(preg_replace('/<.*?>/', '', $text)) <= $length) {
@@ -195,9 +197,9 @@ function news_slider_truncate_news($text, $length = 100, $ending = '...', $exact
                 $entitieslength = 0;
                 // Search for html entities.
                 if (preg_match_all('/&[0-9a-z]{2,8};|&#[0-9]{1,7};|[0-9a-f]{1,6};/i',
-                                    $linematchings[2],
-                                    $entities,
-                                    PREG_OFFSET_CAPTURE)) {
+                    $linematchings[2],
+                    $entities,
+                    PREG_OFFSET_CAPTURE)) {
                     // Calculate the real length of all entities in the legal range.
                     foreach ($entities[0] as $entity) {
                         if ($entity[1] + 1 - $entitieslength <= $left) {

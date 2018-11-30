@@ -17,10 +17,9 @@
 /**
  * Version details
  *
- * @package   block_news_slider
+ * @package   block_news_forum_slider
  * @copyright 2017 Manoj Solanki (Coventry University)
- * @copyright
- * @copyright
+ * @copyright 2018 DigiDago
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
  */
@@ -28,21 +27,20 @@
 defined('MOODLE_INTERNAL') || die();
 
 $capabilities = array(
-        'block/news_slider:myaddinstance' => array(
-                'captype' => 'write',
-                'contextlevel' => CONTEXT_SYSTEM,
-                'archetypes' => array('user' => CAP_ALLOW),
-                'clonepermissionsfrom' => 'moodle/my:manageblocks'
+    'block/news_forum_slider:myaddinstance' => array(
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_SYSTEM,
+        'archetypes' => array('user' => CAP_ALLOW),
+        'clonepermissionsfrom' => 'moodle/my:manageblocks'
+    ),
+    'block/news_forum_slider:addinstance' => array(
+        'riskbitmask' => RISK_SPAM | RISK_XSS,
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_BLOCK,
+        'archetypes' => array(
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW
         ),
-        'block/news_slider:addinstance' => array(
-                'riskbitmask' => RISK_SPAM | RISK_XSS,
-                'captype' => 'write',
-                'contextlevel' => CONTEXT_BLOCK,
-                'archetypes' => array(
-                        'editingteacher' => CAP_ALLOW,
-                        'manager' => CAP_ALLOW
-                ),
-                'clonepermissionsfrom' => 'moodle/site:manageblocks'
-        )
-
+        'clonepermissionsfrom' => 'moodle/site:manageblocks'
+    )
 );

@@ -18,9 +18,9 @@
  *
  * Settings for Block news slider.
  *
- * @package   block_news_slider
+ * @package   block_news_forum_slider
  * @copyright 2017 Manoj Solanki (Coventry University)
- * @copyright
+ * @copyright 2018 DigiDago
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
  */
@@ -29,18 +29,18 @@ defined('MOODLE_INTERNAL') || die;
 
 if ($ADMIN->fulltree) {
 
-    $settings->add(new admin_setting_configtext('block_news_slider/excerptlength',
-            get_string('excerptlength', 'block_news_slider'),
-            get_string('excerptlengthdesc', 'block_news_slider'), NEWS_SLIDER_EXCERPT_LENGTH, PARAM_INT));
+    $settings->add(new admin_setting_configtext('block_news_forum_slider/excerptlength',
+        get_string('excerptlength', 'block_news_forum_slider'),
+        get_string('excerptlengthdesc', 'block_news_forum_slider'), NEWS_FORUM_SLIDER_EXCERPT_LENGTH, PARAM_INT));
 
-    $settings->add(new admin_setting_configtext('block_news_slider/subjectmaxlength',
-            get_string('subjectmaxlength', 'block_news_slider'),
-            get_string('subjectmaxlengthdesc', 'block_news_slider'), NEWS_SLIDER_SUBJECT_MAX_LENGTH, PARAM_INT));
+    $settings->add(new admin_setting_configtext('block_news_forum_slider/subjectmaxlength',
+        get_string('subjectmaxlength', 'block_news_forum_slider'),
+        get_string('subjectmaxlengthdesc', 'block_news_forum_slider'), NEWS_FORUM_SLIDER_SUBJECT_MAX_LENGTH, PARAM_INT));
 
-    $settings->add(new admin_setting_configcheckbox('block_news_slider/usecaching', get_string('usecaching', 'block_news_slider'),
-            get_string('usecachingdesc', 'block_news_slider'), 0));
+    $settings->add(new admin_setting_configcheckbox('block_news_forum_slider/usecaching', get_string('usecaching', 'block_news_forum_slider'),
+        get_string('usecachingdesc', 'block_news_forum_slider'), 0));
 
-    $settings->add(new admin_setting_configtext('block_news_slider/cachingttl',
-            get_string('cachingttl', 'block_news_slider'),
-            get_string('cachingttldesc', 'block_news_slider'), NEWS_SLIDER_CACHING_TTL, PARAM_INT));
+    $settings->add(new admin_setting_configtext('block_news_forum_slider/cachingttl',
+        get_string('cachingttl', 'block_news_forum_slider'),
+        get_string('cachingttldesc', 'block_news_forum_slider'), NEWS_FORUM_SLIDER_CACHING_TTL, PARAM_INT));
 }
