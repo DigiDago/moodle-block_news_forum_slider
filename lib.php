@@ -20,7 +20,7 @@
  * @package block_news_slider
  * @copyright 2017 Manoj Solanki (Coventry University)
  * @copyright 2017 John Tutchings (Coventry University)
- * @copyright
+ * @copyright 2018 DigiDago
  *
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
@@ -43,13 +43,16 @@ $defaultblocksettings = array(
  * Get news items that need to be displayed.
  *
  * @param stdClass $course a course to get the news items from for the current user
- * @param bool     $getsitenews optional flag.  If set to true, get site news instead
- * @param stdClass $sliderconfig  Object containing config data
+ * @param bool $getsitenews optional flag.  If set to true, get site news instead
+ * @param stdClass $sliderconfig Object containing config data
  *
+ * @param null $currenttotalcoursesretrieved
  * @return array List of news items to show
+ * @throws coding_exception
+ * @throws moodle_exception
  */
 function news_slider_get_course_news($course, $getsitenews = false, $sliderconfig = null, &$currenttotalcoursesretrieved = null) {
-    global $USER, $OUTPUT, $COURSE;
+    global $OUTPUT, $COURSE;
 
     $posttext = '';
 
@@ -59,7 +62,7 @@ function news_slider_get_course_news($course, $getsitenews = false, $sliderconfi
     if ($getsitenews) {
         global $SITE;
 
-        if (! $newsforum = forum_get_course_forum($SITE->id, "news")) {
+        if (! $newsforum = forum_get_course_forum($SITE->id, 'general')) {
             return $newsitems;
         }
         $cm = get_coursemodule_from_instance('forum', $newsforum->id, $SITE->id, false, MUST_EXIST);
@@ -67,7 +70,6 @@ function news_slider_get_course_news($course, $getsitenews = false, $sliderconfi
         $totalpoststoshow = $sliderconfig->siteitemstoshow;
         $postsupdatedsince = $sliderconfig->siteitemsperiod * 86400;
         $postsupdatedsince = time() - $postsupdatedsince;
-        $sort = forum_get_default_sort_order(true, 'p.modified', 'd', true); // Last parameter set to true to include pinned posts.
         $discussions = forum_get_discussions($cm, "", true, null, $totalpoststoshow, null, null, null, null, $postsupdatedsince);
     } else {
         // Get course posts.
@@ -85,7 +87,7 @@ function news_slider_get_course_news($course, $getsitenews = false, $sliderconfi
 
         $postsupdatedsince = $sliderconfig->courseitemsperiod * 86400;
         $postsupdatedsince = time() - $postsupdatedsince;
-        $newsforum = forum_get_course_forum($course->id, 'news');
+        $newsforum = forum_get_course_forum($course->id, 'general');
         $cm = get_coursemodule_from_instance('forum', $newsforum->id, $newsforum->course);
 
         $discussions = forum_get_discussions($cm, "", true, null, $totalpoststoshow, null, null, null, null, $postsupdatedsince);
@@ -149,11 +151,11 @@ function news_slider_get_course_news($course, $getsitenews = false, $sliderconfi
 /**
  * Truncates the News item so it fits in the news tabs nicely
  *
- * @param stdClass  $text   The news item text.
- * @param stdClass  $length The length to trim it down to.
- * @param stdClass  $ending  What to display at the end of the string if we have trimmed the item.
- * @param stdClass  $exact
- * @param stdClass  $considerhtml If the html make up tages should be ignored in the length to trim the text down to.
+ * @param stdClass $text The news item text.
+ * @param int $length The length to trim it down to.
+ * @param string $ending What to display at the end of the string if we have trimmed the item.
+ * @param bool $exact
+ * @param bool $considerhtml If the html make up tages should be ignored in the length to trim the text down to.
  * @return string
  */
 function news_slider_truncate_news($text, $length = 100, $ending = '...', $exact = false, $considerhtml = true) {
@@ -246,6 +248,3 @@ function news_slider_truncate_news($text, $length = 100, $ending = '...', $exact
     }
     return $truncate;
 }
-
-
-

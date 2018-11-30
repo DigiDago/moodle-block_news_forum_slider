@@ -19,7 +19,7 @@
  *
  * @package block_news_slider
  * @copyright 2017 Manoj Solanki (Coventry University)
- * @copyright
+ * @copyright 2018 DigiDago
  *
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
@@ -38,6 +38,7 @@ require_once(dirname(__FILE__) . '/lib.php');
  *
  * @package block_news_slider
  * @copyright 2017 Manoj Solanki (Coventry University)
+ * @copyright 2018 DigiDago
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class block_news_slider extends block_base {
@@ -82,6 +83,7 @@ class block_news_slider extends block_base {
 
     /**
      * Adds title to block instance.
+     * @throws coding_exception
      */
     public function init() {
         $this->blockname = get_class($this);
@@ -90,9 +92,13 @@ class block_news_slider extends block_base {
 
     /**
      * Calls functions to load js and css and returns block instance content.
+     * @return stdClass|stdObject|string
+     * @throws coding_exception
+     * @throws dml_exception
+     * @throws moodle_exception
      */
     public function get_content() {
-        global $COURSE, $USER, $OUTPUT, $PAGE, $ME;
+        global $COURSE, $PAGE, $ME;
 
         $config = get_config($this->blockname);
         if ($this->content !== null) {
@@ -150,8 +156,6 @@ class block_news_slider extends block_base {
 
         $PAGE->requires->css('/blocks/news_slider/slick/slick.css');
         $PAGE->requires->css('/blocks/news_slider/slick/slick-theme.css');
-
-        $newscontent = "";  // Used to store news content.
 
         // Check if caching is being used.  Caching doesn't apply to course page slider.
         if ( (!empty ($config->usecaching) && ($COURSE->id <= 1) ) ) {
@@ -215,7 +219,7 @@ class block_news_slider extends block_base {
         $newsblock = $this->get_courses_news();
 
         if (empty ($newsblock)) {
-            return '';
+            return [];
         }
         $newscontentjson = new stdClass();
 
@@ -227,14 +231,6 @@ class block_news_slider extends block_base {
 
         $newscontentjson->news = array_values($newsblock);
 
-        if (!empty($this->config->showdots) && ($this->config->showdots == true)) {
-            $newscontentjson->slidercontainerstyles = ' style="height: 125px;" ';
-        } else if (!isset ($this->config->showdots)) {  // Check config setting is recognised.
-            $newscontentjson->slidercontainerstyles = ' style="height: 125px;" ';
-        } else {
-            $newscontentjson->slidercontainerstyles = '';
-        }
-
         $newscontentfinal = $OUTPUT->render_from_template($this->blockname . '/slider', $newscontentjson);
         return $newscontentfinal;
     }
@@ -243,9 +239,10 @@ class block_news_slider extends block_base {
      * Gets course news for relevant courses.
      *
      * @return array An array of news posts
+     * @throws coding_exception
      */
     private function get_courses_news() {
-        global $COURSE, $USER, $OUTPUT, $CFG, $SITE, $PAGE;
+        global $COURSE, $USER;
 
         // Get all courses news.
         $allcourses = enrol_get_my_courses('id, shortname', 'visible DESC,sortorder ASC');
@@ -299,9 +296,6 @@ class block_news_slider extends block_base {
         $newsblock->headlines = array();
         $newsblock->newsitems = array();
         $coursenews = array();
-        $tempnews = array();
-
-        $newscontent = array();
 
         // Get course news.
         if ( ($newstype == $this::DISPLAY_MODE_ALL_NEWS) || ($newstype == $this::DISPLAY_MODE_COURSE_NEWS) ) {
@@ -321,7 +315,6 @@ class block_news_slider extends block_base {
                     }
 
                 } // End foreach.
-
             }
         }
 
@@ -356,11 +349,12 @@ class block_news_slider extends block_base {
      * Format news items ready for display and rendering by a template.
      *
      * @param stdClass $course The course from which to get the news items for the current user
-     * @param array    $newsitems Array of news items to format
-     * @param array    $returnedcoursenews The array to populate with formatted news items
+     * @param array $newsitems Array of news items to format
+     * @param array $returnedcoursenews The array to populate with formatted news items
      *
-     * @return None
-     *
+     * @return void
+     * @throws dml_exception
+     * @throws moodle_exception
      */
     private function format_course_news_items($course, $newsitems, &$returnedcoursenews) {
         global $SITE;
@@ -383,9 +377,8 @@ class block_news_slider extends block_base {
                 $subject = $news['pinned'] . ' ' . $subject;
             }
 
-            $headline = html_writer::tag('div', html_writer::link(new moodle_url('/mod/forum/discuss.php',
-                    array('d' => $news['discussion'])), $subject),
-                    array('class' => 'news_sliderNewsHeadline'));
+            $headline = html_writer::tag('a', html_writer::link(new moodle_url('/mod/forum/discuss.php',
+                    array('d' => $news['discussion'])), $subject));
 
             $readmorelink = '';
 
@@ -408,7 +401,7 @@ class block_news_slider extends block_base {
             $oldernewslink = "";
             if ($course->id == $SITE->id) {
 
-                $newsforum = forum_get_course_forum($SITE->id, 'news');
+                $newsforum = forum_get_course_forum($SITE->id, 'general');
 
                 if ($newsforum) {
                     global $CFG;
@@ -459,7 +452,6 @@ class block_news_slider extends block_base {
                     'link'             => $newslink,
                     'profilelink'      => new moodle_url('/user/view.php', array('id' => $news['userid'], 'course' => $course->id))
             );
-
         }
     }
 
@@ -487,5 +479,4 @@ class block_news_slider extends block_base {
     public function hide_header() {
         return true;
     }
-
 }

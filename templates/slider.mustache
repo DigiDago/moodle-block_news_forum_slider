@@ -22,7 +22,7 @@
     News content json template
 
     {
-    "news": [
+    'general': [
         {"headline":"Headline 1", "message":"Content 1"},
         {"headline":"Headline 1", "message":"Content 2"},
         {"headline":"Headline 1", "content":"Content 3"}
@@ -30,29 +30,30 @@
 }
 }}
 
-<div id="slider-container" {{{slidercontainerstyles}}}>
+<div id="slider-container">
 
-    <div class="slider-banner-col" style="height: 100%">
-            <span>{{title}}</span>
+    <div class="slider-banner-col">
+            <h3>{{title}}</h3>
     </div>
 
     <div class="news-slider responsive slider-col">
         {{#news}}
-            <div>
-                <div style="float: right;">
-                    <div class="slider-col-date">{{userdayofdate}} {{userdatemodified}}</div>
-                    <div class="slider-col-date-minimal">{{userdatemodified}}</div>
-                </div>
-
-                <div style="float: left; padding: 0px 10px 0px 10px; min-height: 90px;">
+            <div class="d-flex">
+                <div class="text-center p-2">
                     {{{userpicture}}}
+                    <div class="slider-col-date font-weight-bold">{{userdayofdate}} {{userdatemodified}}</div>
                 </div>
-                <span class="newscontent">
-                    <span class="headline">{{{headline}}}</span>
-                    <span class="authorline"><strong>{{{courseshortname}}}</strong>{{author}}</span>
-                    <span class="slider-message">{{{message}}}</span>
-                    <span class="slider-message-short">{{{shortmessage}}}</span>
-                    </span>
+                <div class="flex-grow-1">
+                    <p class="newscontent text-center">
+                        <span class="headline">
+                            {{{headline}}}
+                        </span>
+                    </p>
+                    <p><span class="slider-message">{{{message}}}</span></p>
+                    <p class="text-right">
+                        <span><strong>{{{courseshortname}}}</strong> {{author}}</span>
+                    </p>
+                </div>
             </div>
         {{/news}}
     </div>
