@@ -35,7 +35,5 @@ $plugin->version = 2018091300;
 // YYYYMMDDHH (This is the release version for Moodle 3.2).
 $plugin->requires = 2016120500;
 
-$plugin->dependencies = array('theme_adaptable' => 2017053100);
-
 $plugin->maturity = MATURITY_STABLE;
 $plugin->release = "1.3.1";
