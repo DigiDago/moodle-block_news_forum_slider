@@ -1,5 +1,5 @@
 {
-  "name": "news_slider-tasks",
+  "name": "news_forum_slider-tasks",
   "version": "0.1.0",
   "description": "Grunt tasks for Adaptable News slider.",
   "main": "Gruntfile.js",
@@ -18,14 +18,18 @@
     {
       "name": "Joby Harding",
       "url": "http://www.iamjoby.com"
+    },
+    {
+      "name": "DigiDago",
+      "url": "https://www.digidago.com/"
     }
   ],
   "repository": {
     "type": "git",
-    "url": "https://bitbucket.org/covuni/moodle-block_news_slider.git"
+    "url": "https://github.com/DigiDago/moodle-block_news_forum_slider"
   },
   "bugs": {
-    "url": "https://bitbucket.org/covuni/moodle-block_news_slider/issues"
+    "url": "https://github.com/DigiDago/moodle-block_news_forum_slider/issues"
   },
   "devDependencies": {
     "grunt": "~1.0.1",

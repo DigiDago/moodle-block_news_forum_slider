@@ -1,9 +1,9 @@
 /* jshint ignore:start */
-define(['jquery', 'block_news_slider/slick', 'core/log'], function($, slick, log) {
+define(['jquery', 'block_news_forum_slider/slick', 'core/log'], function($, slick, log) {
 
     "use strict"; // ... jshint ;_;.
 
-    log.debug('news_slider slider.js function called');
+    log.debug('news_forum_slider slider.js function called');
 
     return {
         init: function (showdots) {

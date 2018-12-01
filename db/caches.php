@@ -18,9 +18,9 @@
 /**
  * Moodle cache definitions
  *
- * @package block_news_slider
+ * @package block_news_forum_slider
  * @copyright 2017 Manoj Solanki (Coventry University)
- * @copyright
+ * @copyright 2018 DigiDago
  *
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
@@ -29,8 +29,8 @@
 defined('MOODLE_INTERNAL') || die;
 
 $definitions = array(
-        'sliderdata' => array(
-                'mode' => cache_store::MODE_SESSION,
-                'simplekeys' => false
-        )
+    'sliderdata' => array(
+        'mode' => cache_store::MODE_SESSION,
+        'simplekeys' => false
+    )
 );

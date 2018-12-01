@@ -15,20 +15,21 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This file contains language strings used for the news slider
+ * This file contains language strings used for the News forum slider
  *
- * @package block_news_slider
+ * @package block_news_forum_slider
  * @copyright 2017 Manoj Solanki
+ * @copyright 2018 DigiDago
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'News Slider';
-$string['blocktitle'] = 'News Slider';
+$string['pluginname'] = 'News forum slider';
+$string['blocktitle'] = 'News forum slider';
 
-$string['news_slider:addinstance'] = 'Add a News Slider block';
-$string['news_slider:myaddinstance'] = 'Add a News Slider block to the My Moodle page.';
+$string['news_forum_slider:addinstance'] = 'Add a News forum slider block';
+$string['news_forum_slider:myaddinstance'] = 'Add a News forum slider block to the My Moodle page.';
 
-$string['cachedef_sliderdata'] = 'Cached data for the news slider';
+$string['cachedef_sliderdata'] = 'Cached data for the News forum slider';
 
 $string['displaymode'] = 'News content display toggle';
 $string['displaymodestringall'] = 'ALL (Site + Course News)';

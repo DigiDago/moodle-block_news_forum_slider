@@ -1,5 +1,5 @@
 # README #
-moodle-block_news_slider
+moodle-block_news_forum_slider
 
 ### Moodle News Slider ###
 A news slider that displays unread course announcements and site announcements.  Can also be used on course pages to show unread announcements for that specific course.
@@ -68,7 +68,7 @@ Version 1.3 (2017122200)
 
 ### How do I get set up? ###
 
-Installs at <moodleroot>/blocks/news_slider
+Installs at <moodleroot>/blocks/news_forum_slider
 
 ## Settings ##
 

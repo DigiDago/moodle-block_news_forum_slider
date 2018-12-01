@@ -17,7 +17,7 @@
 /**
  * Moodle News Slider block.  Displays course and site announcements.
  *
- * @package block_news_slider
+ * @package block_news_forum_slider
  * @copyright 2017 Manoj Solanki (Coventry University)
  * @copyright 2018 DigiDago
  *
@@ -30,21 +30,22 @@ defined('MOODLE_INTERNAL') || die;
 require_once($CFG->dirroot . '/user/profile/lib.php');
 require_once($CFG->dirroot . '/user/lib.php');
 require_once($CFG->libdir . '/externallib.php');
-require_once($CFG->dirroot .'/course/lib.php'); // Included to be able to get site news older posts.
+require_once($CFG->dirroot . '/course/lib.php'); // Included to be able to get site news older posts.
 require_once(dirname(__FILE__) . '/lib.php');
 
 /**
  * News Slider block implementation class.
  *
- * @package block_news_slider
+ * @package block_news_forum_slider
  * @copyright 2017 Manoj Solanki (Coventry University)
  * @copyright 2018 DigiDago
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class block_news_slider extends block_base {
+class block_news_forum_slider extends block_base {
 
     /** @var string The name of the block */
-    public $blockname = null;
+    public
+    $blockname = null;
 
     /** @var int Display Mode all news */
     const DISPLAY_MODE_ALL_NEWS = 1;
@@ -54,19 +55,19 @@ class block_news_slider extends block_base {
     const DISPLAY_MODE_COURSE_NEWS = 3;
 
     /** @var int Default number of site items to show */
-    const NEWS_SLIDER_DEFAULT_SITE_NEWS_ITEMS = 4;
+    const NEWS_FORUM_SLIDER_DEFAULT_SITE_NEWS_ITEMS = 4;
 
     /** @var int Default site news period to show */
-    const NEWS_SLIDER_DEFAULT_SITE_NEWS_PERIOD = 7; // In days.
+    const NEWS_FORUM_SLIDER_DEFAULT_SITE_NEWS_PERIOD = 7; // In days.
 
     /** @var int Default number of course items to show */
-    const NEWS_SLIDER_DEFAULT_COURSE_NEWS_ITEMS = 7;
+    const NEWS_FORUM_SLIDER_DEFAULT_COURSE_NEWS_ITEMS = 7;
 
     /** @var int Default course news period to show */
-    const NEWS_SLIDER_DEFAULT_COURSE_NEWS_PERIOD = 7; // In days.
+    const NEWS_FORUM_SLIDER_DEFAULT_COURSE_NEWS_PERIOD = 7; // In days.
 
     /** @var string Default left banner title */
-    const NEWS_SLIDER_DEFAULT_TITLE_BANNER = "Latest News";
+    const NEWS_FORUM_SLIDER_DEFAULT_TITLE_BANNER = "Latest News";
 
     /** @var int Default no news display text */
     const DISPLAY_NO_NEWS_TEXT = "You do not have any unread news posts at the moment";
@@ -85,7 +86,9 @@ class block_news_slider extends block_base {
      * Adds title to block instance.
      * @throws coding_exception
      */
-    public function init() {
+    public
+    function init()
+    {
         $this->blockname = get_class($this);
         $this->title = get_string('pluginname', $this->blockname);
     }
@@ -97,7 +100,9 @@ class block_news_slider extends block_base {
      * @throws dml_exception
      * @throws moodle_exception
      */
-    public function get_content() {
+    public
+    function get_content()
+    {
         global $COURSE, $PAGE, $ME;
 
         $config = get_config($this->blockname);
@@ -129,7 +134,7 @@ class block_news_slider extends block_base {
             // In practice, $url should always be valid.
             if ($url !== null) {
                 // Check if this is the course view page.
-                if (strstr ($url->raw_out(), 'course/view.php')) {
+                if (strstr($url->raw_out(), 'course/view.php')) {
 
                     // Get raw querystring params from URL.
                     $getparams = http_build_query($_GET);
@@ -139,8 +144,8 @@ class block_news_slider extends block_base {
                     // above.  This is due to section 0 not actually recording 'section' as a param.
                     $urlparams = $url->params();
 
-                    if ((count ($urlparams) == 1) && (!array_key_exists('section', $urlparams)) &&
-                            (!strstr ($getparams, 'section=')) ) {
+                    if ((count($urlparams) == 1) && (!array_key_exists('section', $urlparams)) &&
+                        (!strstr($getparams, 'section='))) {
                         $displayblock = true;
                     }
                 }
@@ -154,11 +159,11 @@ class block_news_slider extends block_base {
 
         $this->content = new stdClass;
 
-        $PAGE->requires->css('/blocks/news_slider/slick/slick.css');
-        $PAGE->requires->css('/blocks/news_slider/slick/slick-theme.css');
+        $PAGE->requires->css('/blocks/news_forum_slider/slick/slick.css');
+        $PAGE->requires->css('/blocks/news_forum_slider/slick/slick-theme.css');
 
         // Check if caching is being used.  Caching doesn't apply to course page slider.
-        if ( (!empty ($config->usecaching) && ($COURSE->id <= 1) ) ) {
+        if ((!empty ($config->usecaching) && ($COURSE->id <= 1))) {
             $cache = cache::make($this->blockname, self::CACHENAME_SLIDER);
 
             $returnedcachedata = $cache->get(self::CACHENAME_SLIDER_KEY);
@@ -172,8 +177,8 @@ class block_news_slider extends block_base {
 
             // If no data retrieved or lastcachebuildtime has no value.
             // Or if user's last cache has expired since it was last built.
-            if ( ($returnedcachedata === false) || (!isset($returnedcachedata['lastcachebuildtime'])) ||
-                ( $timenow > ($returnedcachedata['lastcachebuildtime'] + $usercachettl)) ) {
+            if (($returnedcachedata === false) || (!isset($returnedcachedata['lastcachebuildtime'])) ||
+                ($timenow > ($returnedcachedata['lastcachebuildtime'] + $usercachettl))) {
 
                 $cachedatastore['data'] = self::build_news();
 
@@ -213,7 +218,9 @@ class block_news_slider extends block_base {
      *
      * @return array HTML formatted news content
      */
-    private function build_news() {
+    private
+    function build_news()
+    {
         global $OUTPUT;
 
         $newsblock = $this->get_courses_news();
@@ -226,7 +233,7 @@ class block_news_slider extends block_base {
         if (!empty ($this->config->bannertitle)) {
             $newscontentjson->title = $this->config->bannertitle;
         } else {
-            $newscontentjson->title = $this::NEWS_SLIDER_DEFAULT_TITLE_BANNER;
+            $newscontentjson->title = $this::NEWS_FORUM_SLIDER_DEFAULT_TITLE_BANNER;
         }
 
         $newscontentjson->news = array_values($newsblock);
@@ -241,7 +248,9 @@ class block_news_slider extends block_base {
      * @return array An array of news posts
      * @throws coding_exception
      */
-    private function get_courses_news() {
+    private
+    function get_courses_news()
+    {
         global $COURSE, $USER;
 
         // Get all courses news.
@@ -256,7 +265,7 @@ class block_news_slider extends block_base {
         }
 
         // This variable is created to pass in as an argument in calls to functions outside of this class
-        // (i.e. news_slider_get_course_news).  This is done when the slider is displayed when a user
+        // (i.e. news_forum_slider_get_course_news).  This is done when the slider is displayed when a user
         // is not logged in, as the code complains (php errors) about the non-existence of config instances in
         // functions called that are outside of this class.
         $sliderconfig = new stdClass();
@@ -271,25 +280,25 @@ class block_news_slider extends block_base {
         if (!empty($this->config->siteitemstoshow)) {
             $sliderconfig->siteitemstoshow = $this->config->siteitemstoshow;
         } else {
-            $sliderconfig->siteitemstoshow = $this::NEWS_SLIDER_DEFAULT_SITE_NEWS_ITEMS;
+            $sliderconfig->siteitemstoshow = $this::NEWS_FORUM_SLIDER_DEFAULT_SITE_NEWS_ITEMS;
         }
 
         if (!empty($this->config->siteitemsperiod)) {
             $sliderconfig->siteitemsperiod = $this->config->siteitemsperiod;
         } else {
-            $sliderconfig->siteitemsperiod = $this::NEWS_SLIDER_DEFAULT_SITE_NEWS_PERIOD;
+            $sliderconfig->siteitemsperiod = $this::NEWS_FORUM_SLIDER_DEFAULT_SITE_NEWS_PERIOD;
         }
 
         if (!empty($this->config->courseitemstoshow)) {
             $sliderconfig->courseitemstoshow = $this->config->courseitemstoshow;
         } else {
-            $sliderconfig->courseitemstoshow = $this::NEWS_SLIDER_DEFAULT_COURSE_NEWS_ITEMS;
+            $sliderconfig->courseitemstoshow = $this::NEWS_FORUM_SLIDER_DEFAULT_COURSE_NEWS_ITEMS;
         }
 
         if (!empty($this->config->courseitemsperiod)) {
             $sliderconfig->courseitemsperiod = $this->config->courseitemsperiod;
         } else {
-            $sliderconfig->courseitemsperiod = $this::NEWS_SLIDER_DEFAULT_COURSE_NEWS_PERIOD;
+            $sliderconfig->courseitemsperiod = $this::NEWS_FORUM_SLIDER_DEFAULT_COURSE_NEWS_PERIOD;
         }
 
         $newsblock = new stdClass;
@@ -298,20 +307,20 @@ class block_news_slider extends block_base {
         $coursenews = array();
 
         // Get course news.
-        if ( ($newstype == $this::DISPLAY_MODE_ALL_NEWS) || ($newstype == $this::DISPLAY_MODE_COURSE_NEWS) ) {
+        if (($newstype == $this::DISPLAY_MODE_ALL_NEWS) || ($newstype == $this::DISPLAY_MODE_COURSE_NEWS)) {
 
             // First check if we're on a course page. If so, only get posts for that course.
             if ($COURSE->id > 1) {
-                $tempnews = news_slider_get_course_news($COURSE, false, $sliderconfig);
+                $tempnews = news_forum_slider_get_course_news($COURSE, false, $sliderconfig);
                 if (!empty($tempnews)) {
-                    $this->format_course_news_items ($COURSE, $tempnews, $coursenews);
+                    $this->format_course_news_items($COURSE, $tempnews, $coursenews);
                 }
             } else {
                 $currenttotalcoursesretrieved = 0;
                 foreach ($allcourses as $course) {
-                    $tempnews = news_slider_get_course_news($course, false, $sliderconfig, $currenttotalcoursesretrieved);
+                    $tempnews = news_forum_slider_get_course_news($course, false, $sliderconfig, $currenttotalcoursesretrieved);
                     if (!empty($tempnews)) {
-                        $this->format_course_news_items ($course, $tempnews, $coursenews);
+                        $this->format_course_news_items($course, $tempnews, $coursenews);
                     }
 
                 } // End foreach.
@@ -319,11 +328,11 @@ class block_news_slider extends block_base {
         }
 
         // Get site news.
-        if ( ($newstype == $this::DISPLAY_MODE_ALL_NEWS) || ($newstype == $this::DISPLAY_MODE_SITE_NEWS) ) {
+        if (($newstype == $this::DISPLAY_MODE_ALL_NEWS) || ($newstype == $this::DISPLAY_MODE_SITE_NEWS)) {
             global $SITE;
-            $tempnews = news_slider_get_course_news($SITE, true, $sliderconfig);
+            $tempnews = news_forum_slider_get_course_news($SITE, true, $sliderconfig);
             if (!empty($tempnews)) {
-                $this->format_course_news_items ($SITE, $tempnews, $coursenews);
+                $this->format_course_news_items($SITE, $tempnews, $coursenews);
             }
         }
 
@@ -336,7 +345,7 @@ class block_news_slider extends block_base {
             // Sory by pinned posts and date by creating sort keys.
             foreach ($coursenews as $key => $row) {
                 // Replace 0 with the field's index/key.
-                $dates[$key]  = $row['pinned'] . $row['datemodified'];
+                $dates[$key] = $row['pinned'] . $row['datemodified'];
             }
             array_multisort($dates, SORT_DESC, $coursenews);
 
@@ -356,7 +365,9 @@ class block_news_slider extends block_base {
      * @throws dml_exception
      * @throws moodle_exception
      */
-    private function format_course_news_items($course, $newsitems, &$returnedcoursenews) {
+    private
+    function format_course_news_items($course, $newsitems, &$returnedcoursenews)
+    {
         global $SITE;
 
         $config = get_config($this->blockname);
@@ -378,19 +389,19 @@ class block_news_slider extends block_base {
             }
 
             $headline = html_writer::tag('a', html_writer::link(new moodle_url('/mod/forum/discuss.php',
-                    array('d' => $news['discussion'])), $subject));
+                array('d' => $news['discussion'])), $subject));
 
             $readmorelink = '';
 
             // Replace p and <br> tags with a '' or space.  Fixes #33 with text being put together from html p and <br> tags.
             $news['message'] = str_replace('<p>', '', $news['message']);
-            $news['message'] = str_replace(',</p>', ', ' , $news['message']);
-            $news['message'] = str_replace('</p>', ' ' , $news['message']);
+            $news['message'] = str_replace(',</p>', ', ', $news['message']);
+            $news['message'] = str_replace('</p>', ' ', $news['message']);
 
-            if ( (!empty($excerptlength)) && ($excerptlength == 0) ) {
+            if ((!empty($excerptlength)) && ($excerptlength == 0)) {
                 $newsmessage = '<a href="' . $newslink . '">' . strip_tags($news['message']) . '</a>';
             } else if (strlen($news['message']) > $excerptlength) {
-                $newsmessage = news_slider_truncate_news(strip_tags($news['message']), $excerptlength, ' .. ');
+                $newsmessage = news_forum_slider_truncate_news(strip_tags($news['message']), $excerptlength, ' .. ');
                 $readmorelink = ' <a href="' . $newslink . '"><strong>[Read More]</strong></a>';
                 $newsmessage .= $readmorelink;
             } else {
@@ -417,15 +428,15 @@ class block_news_slider extends block_base {
             }
 
             // Check config for displaying older posts.
-            if (!empty($this->config->showoldnews) && ($this->config->showoldnews == true) ) {
+            if (!empty($this->config->showoldnews) && ($this->config->showoldnews == true)) {
                 $newsmessage .= $oldernewslink;
             }
 
             // For small screen displays, prepare a shorter version of news message, regardless
             // of excerpt length config.
             $shortnewsexcerptlength = 50;
-            $shortnewsmessage = news_slider_truncate_news(strip_tags($news['message']), $shortnewsexcerptlength, ' .. ');
-            if (strstr ($shortnewsmessage, ' .. ')) {
+            $shortnewsmessage = news_forum_slider_truncate_news(strip_tags($news['message']), $shortnewsexcerptlength, ' .. ');
+            if (strstr($shortnewsmessage, ' .. ')) {
                 $shortnewsmessage .= $readmorelink;
             }
             $shortnewsmessage = '<a href="' . $newslink . '">' . $shortnewsmessage . ' </a>';
@@ -438,19 +449,19 @@ class block_news_slider extends block_base {
                 $courseshortname .= '<strong> ' . $course->shortname . '</strong></a>';
             }
 
-            $returnedcoursenews[] = array('headline'  => $headline,
-                    'author'           => ', by ' . $news['author'],
-                    'courseshortname'  => $courseshortname,
-                    'message'          => $newsmessage,
-                    'shortmessage'     => $shortnewsmessage,
-                    'userdayofdate'    => date('l', $news['modified']) . ',',
-                    'datemodified'     => $news['modified'],
-                    'pinned'           => $news['pinned'],
-                    'userdatemodified' => date('d/m/Y', $news['modified']),
-                    'userid'           => $news['userid'],
-                    'userpicture'      => $news['userpicture'],
-                    'link'             => $newslink,
-                    'profilelink'      => new moodle_url('/user/view.php', array('id' => $news['userid'], 'course' => $course->id))
+            $returnedcoursenews[] = array('headline' => $headline,
+                'author' => ', by ' . $news['author'],
+                'courseshortname' => $courseshortname,
+                'message' => $newsmessage,
+                'shortmessage' => $shortnewsmessage,
+                'userdayofdate' => date('l', $news['modified']) . ',',
+                'datemodified' => $news['modified'],
+                'pinned' => $news['pinned'],
+                'userdatemodified' => date('d/m/Y', $news['modified']),
+                'userid' => $news['userid'],
+                'userpicture' => $news['userpicture'],
+                'link' => $newslink,
+                'profilelink' => new moodle_url('/user/view.php', array('id' => $news['userid'], 'course' => $course->id))
             );
         }
     }
@@ -458,7 +469,9 @@ class block_news_slider extends block_base {
     /**
      * Allows multiple instances of the block.
      */
-    public function instance_allow_multiple() {
+    public
+    function instance_allow_multiple()
+    {
         return true;
     }
 
@@ -467,7 +480,9 @@ class block_news_slider extends block_base {
      *
      * @return boolean
      */
-    public function has_config() {
+    public
+    function has_config()
+    {
         return true;
     }
 
@@ -476,7 +491,9 @@ class block_news_slider extends block_base {
      *
      * @return bool if true then header will be visible.
      */
-    public function hide_header() {
+    public
+    function hide_header()
+    {
         return true;
     }
 }

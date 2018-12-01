@@ -40,7 +40,7 @@
  *
  *
  * @package blocks
- * @subpackage news_slider
+ * @subpackage news_forum_slider
  * @author M Solanki - {@link https://moodle.org/user/profile.php?id=2227655}
  * @author Based on code originally written by Gareth J Barnard, Joby Harding, Bas Brands, David Scotson and many other contributors.
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -53,7 +53,7 @@ module.exports = function(grunt) { // jshint ignore:line
 
     // Theme Bootstrap constants.
     var MOODLEURLPREFIX = grunt.option('urlprefix') || '',
-        THEMEDIR        = path.basename(path.resolve('.'));
+        THEMEDIR = path.basename(path.resolve('.'));
 
     // PHP strings for exec task.
     var moodleroot = path.dirname(path.dirname(__dirname)), // jshint ignore:line
