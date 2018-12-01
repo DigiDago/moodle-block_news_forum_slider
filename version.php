@@ -32,8 +32,10 @@ $plugin->component = 'block_news_forum_slider';
 // YYYYMMDDHH (year, month, day, 24-hr time).
 $plugin->version = 2018113012;
 
+
 // YYYYMMDDHH (This is the release version for Moodle 3.5 - since not tested < 3.5).
 $plugin->requires = 2018051703;
+
 
 $plugin->maturity = MATURITY_STABLE;
 $plugin->release = "1.0";
