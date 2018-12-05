@@ -53,25 +53,32 @@ $defaultblocksettings = array(
  */
 function news_forum_slider_get_course_news($course, $getsitenews = false, $sliderconfig = null, &$currenttotalcoursesretrieved = null)
 {
-    global $OUTPUT, $COURSE;
+    global $OUTPUT, $COURSE, $DB;
 
     $posttext = '';
 
     $newsitems = array();
 
+    if (!$forums = $DB->get_records_select("forum", "course = ? AND type = ?", array($course->id, 'general'), "id ASC")) {
+        // we need to prevent case were we didn't get any general forum in course
+        return $newsitems;
+    }
+
     // If getsitenews is set to true, get site news instead.
     if ($getsitenews) {
         global $SITE;
-
         if (!$newsforum = forum_get_course_forum($SITE->id, 'general')) {
             return $newsitems;
         }
-        $cm = get_coursemodule_from_instance('forum', $newsforum->id, $SITE->id, false, MUST_EXIST);
+        $cm = get_coursemodule_from_instance('forum',
+            $newsforum->id, $SITE->id, false, MUST_EXIST);
 
         $totalpoststoshow = $sliderconfig->siteitemstoshow;
         $postsupdatedsince = $sliderconfig->siteitemsperiod * 86400;
         $postsupdatedsince = time() - $postsupdatedsince;
-        $discussions = forum_get_discussions($cm, "", true, null, $totalpoststoshow, null, null, null, null, $postsupdatedsince);
+        $discussions = forum_get_discussions($cm, "", true,
+            null, $totalpoststoshow, null, null,
+            null, null, $postsupdatedsince);
     } else {
         // Get course posts.
 
@@ -89,11 +96,12 @@ function news_forum_slider_get_course_news($course, $getsitenews = false, $slide
         $postsupdatedsince = $sliderconfig->courseitemsperiod * 86400;
         $postsupdatedsince = time() - $postsupdatedsince;
         $newsforum = forum_get_course_forum($course->id, 'general');
-        $cm = get_coursemodule_from_instance('forum', $newsforum->id, $newsforum->course);
+        if ($newsforum != false && isset($newsforum)) {
+            $cm = get_coursemodule_from_instance('forum', $newsforum->id, $newsforum->course);
+            $discussions = forum_get_discussions($cm, "", true, null, $totalpoststoshow, null, null, null, null, $postsupdatedsince);
+        }
 
-        $discussions = forum_get_discussions($cm, "", true, null, $totalpoststoshow, null, null, null, null, $postsupdatedsince);
-
-        if ($currenttotalcoursesretrieved !== null) {
+        if ($currenttotalcoursesretrieved !== null && isset($discussions)) {
             $currenttotalcoursesretrieved += count($discussions);
         }
     }
@@ -105,46 +113,47 @@ function news_forum_slider_get_course_news($course, $getsitenews = false, $slide
     if (($COURSE->id <= 1) && ($course->id > 1)) {
         $getpinnedposts = false;
     }
+    if (isset($discussions)) {
+        foreach ($discussions as $discussion) {
 
-    foreach ($discussions as $discussion) {
+            // Get user profile picture.
 
-        // Get user profile picture.
+            // Build an object that represents the posting user.
+            $postuser = new stdClass;
+            $postuserfields = explode(',', user_picture::fields());
+            $postuser = username_load_fields_from_object($postuser, $discussion, null, $postuserfields);
+            $postuser->id = $discussion->userid;
+            $postuser->fullname = $discussion->firstname . ' ' . $discussion->lastname;
+            $postuser->profilelink = new moodle_url('/user/view.php', array('id' => $discussion->userid, 'course' => $course->id));
 
-        // Build an object that represents the posting user.
-        $postuser = new stdClass;
-        $postuserfields = explode(',', user_picture::fields());
-        $postuser = username_load_fields_from_object($postuser, $discussion, null, $postuserfields);
-        $postuser->id = $discussion->userid;
-        $postuser->fullname = $discussion->firstname . ' ' . $discussion->lastname;
-        $postuser->profilelink = new moodle_url('/user/view.php', array('id' => $discussion->userid, 'course' => $course->id));
+            $userpicture = $OUTPUT->user_picture($postuser, array('courseid' => $course->id, 'size' => 80));
 
-        $userpicture = $OUTPUT->user_picture($postuser, array('courseid' => $course->id, 'size' => 80));
+            $newsitems[$discussion->id]['course'] = $course->shortname;
+            $newsitems[$discussion->id]['courseid'] = $course->id;
+            $newsitems[$discussion->id]['discussion'] = $discussion->discussion;
+            $newsitems[$discussion->id]['modified'] = $discussion->modified;
+            $newsitems[$discussion->id]['author'] = $discussion->firstname . ' ' . $discussion->lastname;
+            $newsitems[$discussion->id]['subject'] = $discussion->subject;
+            $newsitems[$discussion->id]['message'] = $discussion->message;
+            $newsitems[$discussion->id]['pinned'] = (($COURSE->id <= 1) && ($course->id > 1)) ? "" : $discussion->pinned;
+            $newsitems[$discussion->id]['userdate'] = userdate($discussion->modified, $strftimerecent);
+            $newsitems[$discussion->id]['userid'] = $discussion->userid;
+            $newsitems[$discussion->id]['userpicture'] = $userpicture;
 
-        $newsitems[$discussion->id]['course'] = $course->shortname;
-        $newsitems[$discussion->id]['courseid'] = $course->id;
-        $newsitems[$discussion->id]['discussion'] = $discussion->discussion;
-        $newsitems[$discussion->id]['modified'] = $discussion->modified;
-        $newsitems[$discussion->id]['author'] = $discussion->firstname . ' ' . $discussion->lastname;
-        $newsitems[$discussion->id]['subject'] = $discussion->subject;
-        $newsitems[$discussion->id]['message'] = $discussion->message;
-        $newsitems[$discussion->id]['pinned'] = (($COURSE->id <= 1) && ($course->id > 1)) ? "" : $discussion->pinned;
-        $newsitems[$discussion->id]['userdate'] = userdate($discussion->modified, $strftimerecent);
-        $newsitems[$discussion->id]['userid'] = $discussion->userid;
-        $newsitems[$discussion->id]['userpicture'] = $userpicture;
-
-        // Check if message is pinned.
-        if ($getpinnedposts == true) {
-            if (FORUM_DISCUSSION_PINNED == $discussion->pinned) {
-                $newsitems[$discussion->id]['pinned'] = $OUTPUT->pix_icon('i/pinned', get_string('discussionpinned', 'forum'),
-                    'mod_forum', array('style' => ' display: inline-block; vertical-align: middle;'));
-            } else {
-                $newsitems[$discussion->id]['pinned'] = "";
+            // Check if message is pinned.
+            if ($getpinnedposts == true) {
+                if (FORUM_DISCUSSION_PINNED == $discussion->pinned) {
+                    $newsitems[$discussion->id]['pinned'] = $OUTPUT->pix_icon('i/pinned', get_string('discussionpinned', 'forum'),
+                        'mod_forum', array('style' => ' display: inline-block; vertical-align: middle;'));
+                } else {
+                    $newsitems[$discussion->id]['pinned'] = "";
+                }
             }
-        }
 
-        $posttext .= $discussion->subject;
-        $posttext .= userdate($discussion->modified, $strftimerecent);
-        $posttext .= $discussion->message . "\n";
+            $posttext .= $discussion->subject;
+            $posttext .= userdate($discussion->modified, $strftimerecent);
+            $posttext .= $discussion->message . "\n";
+        }
     }
     return $newsitems;
 }

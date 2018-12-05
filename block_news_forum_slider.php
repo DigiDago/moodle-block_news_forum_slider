@@ -316,13 +316,13 @@ class block_news_forum_slider extends block_base {
                     $this->format_course_news_items($COURSE, $tempnews, $coursenews);
                 }
             } else {
+
                 $currenttotalcoursesretrieved = 0;
                 foreach ($allcourses as $course) {
                     $tempnews = news_forum_slider_get_course_news($course, false, $sliderconfig, $currenttotalcoursesretrieved);
                     if (!empty($tempnews)) {
                         $this->format_course_news_items($course, $tempnews, $coursenews);
                     }
-
                 } // End foreach.
             }
         }
@@ -338,17 +338,14 @@ class block_news_forum_slider extends block_base {
 
         if (empty($coursenews)) {
             $coursenews = array();
-
         } else {
             // Sort course news items.
-
             // Sory by pinned posts and date by creating sort keys.
             foreach ($coursenews as $key => $row) {
                 // Replace 0 with the field's index/key.
                 $dates[$key] = $row['pinned'] . $row['datemodified'];
             }
             array_multisort($dates, SORT_DESC, $coursenews);
-
         }
 
         return $coursenews;
