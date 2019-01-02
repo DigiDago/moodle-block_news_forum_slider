@@ -399,7 +399,7 @@ class block_news_forum_slider extends block_base {
                 $newsmessage = '<a href="' . $newslink . '">' . strip_tags($news['message']) . '</a>';
             } else if (strlen($news['message']) > $excerptlength) {
                 $newsmessage = news_forum_slider_truncate_news(strip_tags($news['message']), $excerptlength, ' .. ');
-                $readmorelink = ' <a href="' . $newslink . '"><strong>[Read More]</strong></a>';
+                $readmorelink = ' <a href="' . $newslink . '"><strong>[' . get_string("readmore", $this->blockname)  . ']</strong></a>';
                 $newsmessage .= $readmorelink;
             } else {
                 $newsmessage = '<a href="' . $newslink . '">' . strip_tags($news['message']) . '</a>';
@@ -418,7 +418,7 @@ class block_news_forum_slider extends block_base {
                         $oldernewslink .= ' | ';
                     }
                     $oldernewslink .= ' <a href="' . $oldnewsurl . '" title="Click here to view older posts">';
-                    $oldernewslink .= '<strong>[Older posts]</strong></a>';
+                    $oldernewslink .= '<strong>[' . get_string("olderposts", $this->blockname)  . ']</strong></a>';
                 } else {
                     print_error('cannotfindorcreateforum', 'forum');
                 }
@@ -447,11 +447,11 @@ class block_news_forum_slider extends block_base {
             }
 
             $returnedcoursenews[] = array('headline' => $headline,
-                'author' => ', by ' . $news['author'],
+                'author' => ', ' . get_string("by", $this->blockname)  . ' ' . $news['author'],
                 'courseshortname' => $courseshortname,
                 'message' => $newsmessage,
                 'shortmessage' => $shortnewsmessage,
-                'userdayofdate' => date('l', $news['modified']) . ',',
+                'userdayofdate' => get_string(strtolower(date('l', $news['modified'])), 'calendar') . ',',
                 'datemodified' => $news['modified'],
                 'pinned' => $news['pinned'],
                 'userdatemodified' => date('d/m/Y', $news['modified']),
