@@ -52,3 +52,7 @@ $string['usecachingdesc'] = 'Switch on caching (uses Moodle cache API)';
 $string['cachingttl'] = 'Caching Expiry time';
 $string['cachingttldesc'] = 'Caching expiry time in seconds (TTL)';
 $string['showdots'] = 'Show bullet (dots) navigation on bottom part of slider';
+
+$string['readmore'] = 'Read more';
+$string['by'] = 'by';
+$string['olderposts'] = 'Older posts';
