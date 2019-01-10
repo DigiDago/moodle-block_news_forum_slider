@@ -44,22 +44,26 @@ class block_news_forum_slider_edit_form extends block_edit_form
      */
     protected function specific_definition($mform)
     {
+        global $DB,$COURSE;
         $mform->addElement('header', 'configheader', get_string('blocksettings', 'block'));
 
+        $forums = $DB->get_records_select("forum", "course = ?", array($COURSE->id), "id ASC");
+
         // Display mode, all news, site news or course news.
-        $displaymodeoptions = array(
-            block_news_forum_slider::DISPLAY_MODE_ALL_NEWS => get_string('displaymodestringall', 'block_news_forum_slider'),
-            block_news_forum_slider::DISPLAY_MODE_SITE_NEWS => get_string('displaymodestringsite', 'block_news_forum_slider'),
-            block_news_forum_slider::DISPLAY_MODE_COURSE_NEWS => get_string('displaymodestringcourse', 'block_news_forum_slider')
-        );
+        $displaymodeoptions = [];
+
+        foreach ($forums as $forum) {
+            $displaymodeoptions[$forum->id] = $forum->name;
+        }
 
         $mform->addElement('text', 'config_bannertitle', get_string('bannertitle', 'block_news_forum_slider'));
         $mform->setDefault('config_bannertitle', block_news_forum_slider::NEWS_FORUM_SLIDER_DEFAULT_TITLE_BANNER);
         $mform->setType('config_bannertitle', PARAM_TEXT);
 
         $mform->addElement('select', 'config_displaymode', get_string('displaymode', 'block_news_forum_slider'), $displaymodeoptions);
-        $mform->setDefault('config_displaymode', block_news_forum_slider::DISPLAY_MODE_ALL_NEWS);
-        $mform->setType('config_displaymode', PARAM_INT);
+        $mform->setDefault('config_displaymode', 0);
+        $mform->setType('config_displaymode', PARAM_TEXT);
+        $mform->getElement('config_displaymode')->setMultiple(true);
 
         $mform->addElement('text', 'config_siteitemstoshow', get_string('siteitemstoshow', 'block_news_forum_slider'));
         $mform->setDefault('config_siteitemstoshow', block_news_forum_slider::NEWS_FORUM_SLIDER_DEFAULT_SITE_NEWS_ITEMS);

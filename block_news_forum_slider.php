@@ -270,13 +270,6 @@ class block_news_forum_slider extends block_base {
         // functions called that are outside of this class.
         $sliderconfig = new stdClass();
 
-        // Check what type of news to display from config.
-        if (!empty($this->config->displaymode)) {
-            $newstype = $this->config->displaymode;
-        } else {
-            $newstype = $this::DISPLAY_MODE_ALL_NEWS;
-        }
-
         if (!empty($this->config->siteitemstoshow)) {
             $sliderconfig->siteitemstoshow = $this->config->siteitemstoshow;
         } else {
@@ -306,34 +299,17 @@ class block_news_forum_slider extends block_base {
         $newsblock->newsitems = array();
         $coursenews = array();
 
-        // Get course news.
-        if (($newstype == $this::DISPLAY_MODE_ALL_NEWS) || ($newstype == $this::DISPLAY_MODE_COURSE_NEWS)) {
 
-            // First check if we're on a course page. If so, only get posts for that course.
-            if ($COURSE->id > 1) {
-                $tempnews = news_forum_slider_get_course_news($COURSE, false, $sliderconfig);
-                if (!empty($tempnews)) {
-                    $this->format_course_news_items($COURSE, $tempnews, $coursenews);
-                }
-            } else {
-
-                $currenttotalcoursesretrieved = 0;
-                foreach ($allcourses as $course) {
-                    $tempnews = news_forum_slider_get_course_news($course, false, $sliderconfig, $currenttotalcoursesretrieved);
-                    if (!empty($tempnews)) {
-                        $this->format_course_news_items($course, $tempnews, $coursenews);
-                    }
-                } // End foreach.
-            }
+        if (empty($this->config->displaymode)) {
+            $newstype = 0;
+        } else {
+            $newstype = $this->config->displaymode;
         }
 
-        // Get site news.
-        if (($newstype == $this::DISPLAY_MODE_ALL_NEWS) || ($newstype == $this::DISPLAY_MODE_SITE_NEWS)) {
-            global $SITE;
-            $tempnews = news_forum_slider_get_course_news($SITE, true, $sliderconfig);
-            if (!empty($tempnews)) {
-                $this->format_course_news_items($SITE, $tempnews, $coursenews);
-            }
+        $tempnews = news_forum_slider_get_course_news($COURSE, $newstype, $sliderconfig);
+
+        if (!empty($tempnews)) {
+            $this->format_course_news_items($COURSE, $tempnews, $coursenews);
         }
 
         if (empty($coursenews)) {

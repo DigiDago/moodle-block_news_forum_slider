@@ -51,60 +51,33 @@ $defaultblocksettings = array(
  * @throws coding_exception
  * @throws moodle_exception
  */
-function news_forum_slider_get_course_news($course, $getsitenews = false, $sliderconfig = null, &$currenttotalcoursesretrieved = null)
+function news_forum_slider_get_course_news($course, $getsitenews, $sliderconfig = null, &$currenttotalcoursesretrieved = null)
 {
-    global $OUTPUT, $COURSE, $DB;
+    global $OUTPUT, $COURSE;
 
     $posttext = '';
 
     $newsitems = array();
 
-    if (!$forums = $DB->get_records_select("forum", "course = ? AND type = ?", array($course->id, 'general'), "id ASC")) {
-        // we need to prevent case were we didn't get any general forum in course
+    if ($getsitenews) {
+        $discussions = [];
+        foreach ($getsitenews as $forumid) {
+            $cm = get_coursemodule_from_instance('forum',
+                $forumid, $COURSE->id, false, MUST_EXIST);
+            $totalpoststoshow = $sliderconfig->siteitemstoshow;
+            $postsupdatedsince = $sliderconfig->siteitemsperiod * 86400;
+            $postsupdatedsince = time() - $postsupdatedsince;
+            $tempdiscussions = forum_get_discussions($cm, "", true,
+                null, $totalpoststoshow, null, null,
+                null, null, $postsupdatedsince);
+            $discussions = array_merge($discussions,$tempdiscussions);
+        }
+    } else {
+        // Get course posts.
         return $newsitems;
     }
 
     // If getsitenews is set to true, get site news instead.
-    if ($getsitenews) {
-        global $SITE;
-        if (!$newsforum = forum_get_course_forum($SITE->id, 'general')) {
-            return $newsitems;
-        }
-        $cm = get_coursemodule_from_instance('forum',
-            $newsforum->id, $SITE->id, false, MUST_EXIST);
-
-        $totalpoststoshow = $sliderconfig->siteitemstoshow;
-        $postsupdatedsince = $sliderconfig->siteitemsperiod * 86400;
-        $postsupdatedsince = time() - $postsupdatedsince;
-        $discussions = forum_get_discussions($cm, "", true,
-            null, $totalpoststoshow, null, null,
-            null, null, $postsupdatedsince);
-    } else {
-        // Get course posts.
-
-        if ($currenttotalcoursesretrieved !== null) {
-            // If reached limit, retrieve no more (as used when this function is called consecutively for many courses).
-            if ($currenttotalcoursesretrieved == $sliderconfig->courseitemstoshow) {
-                return array();
-            } else {
-                $totalpoststoshow = $sliderconfig->courseitemstoshow - $currenttotalcoursesretrieved;
-            }
-        } else {
-            $totalpoststoshow = $sliderconfig->courseitemstoshow;
-        }
-
-        $postsupdatedsince = $sliderconfig->courseitemsperiod * 86400;
-        $postsupdatedsince = time() - $postsupdatedsince;
-        $newsforum = forum_get_course_forum($course->id, 'general');
-        if ($newsforum != false && isset($newsforum)) {
-            $cm = get_coursemodule_from_instance('forum', $newsforum->id, $newsforum->course);
-            $discussions = forum_get_discussions($cm, "", true, null, $totalpoststoshow, null, null, null, null, $postsupdatedsince);
-        }
-
-        if ($currenttotalcoursesretrieved !== null && isset($discussions)) {
-            $currenttotalcoursesretrieved += count($discussions);
-        }
-    }
 
     $strftimerecent = get_string('strftimerecent');
 
