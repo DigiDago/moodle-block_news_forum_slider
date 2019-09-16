@@ -276,22 +276,10 @@ class block_news_forum_slider extends block_base {
             $sliderconfig->siteitemstoshow = $this::NEWS_FORUM_SLIDER_DEFAULT_SITE_NEWS_ITEMS;
         }
 
-        if (!empty($this->config->siteitemsperiod)) {
-            $sliderconfig->siteitemsperiod = $this->config->siteitemsperiod;
-        } else {
-            $sliderconfig->siteitemsperiod = $this::NEWS_FORUM_SLIDER_DEFAULT_SITE_NEWS_PERIOD;
-        }
-
         if (!empty($this->config->courseitemstoshow)) {
             $sliderconfig->courseitemstoshow = $this->config->courseitemstoshow;
         } else {
             $sliderconfig->courseitemstoshow = $this::NEWS_FORUM_SLIDER_DEFAULT_COURSE_NEWS_ITEMS;
-        }
-
-        if (!empty($this->config->courseitemsperiod)) {
-            $sliderconfig->courseitemsperiod = $this->config->courseitemsperiod;
-        } else {
-            $sliderconfig->courseitemsperiod = $this::NEWS_FORUM_SLIDER_DEFAULT_COURSE_NEWS_PERIOD;
         }
 
         $newsblock = new stdClass;
