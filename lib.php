@@ -65,11 +65,9 @@ function news_forum_slider_get_course_news($course, $getsitenews, $sliderconfig 
             $cm = get_coursemodule_from_instance('forum',
                 $forumid, $COURSE->id, false, MUST_EXIST);
             $totalpoststoshow = $sliderconfig->siteitemstoshow;
-            $postsupdatedsince = $sliderconfig->siteitemsperiod * 86400;
-            $postsupdatedsince = time() - $postsupdatedsince;
             $tempdiscussions = forum_get_discussions($cm, "", true,
                 null, $totalpoststoshow, null, null,
-                null, null, $postsupdatedsince);
+                null, null, null);
             $discussions = array_merge($discussions,$tempdiscussions);
         }
     } else {
