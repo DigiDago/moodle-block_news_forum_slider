@@ -16,3 +16,21 @@
     margin-right: auto;
     margin-left: auto;
 }
+
+.news-slider {
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
+.news-slider .slick-prev {
+    left: 0;
+}
+
+.news-slider .slick-next {
+    right: 0;
+}
+
+.slick-prev:before,
+.slick-next:before {
+    color: black !important;
+}
