@@ -224,7 +224,6 @@ class block_news_forum_slider extends block_base {
         global $OUTPUT;
 
         $newsblock = $this->get_courses_news();
-
         if (empty ($newsblock)) {
             return [];
         }
