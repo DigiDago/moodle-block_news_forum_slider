@@ -58,12 +58,15 @@ function news_forum_slider_get_course_news($course, $getsitenews, $sliderconfig 
     $posttext = '';
 
     $newsitems = array();
-
     if ($getsitenews) {
         $discussions = [];
         foreach ($getsitenews as $forumid) {
             $cm = get_coursemodule_from_instance('forum',
-                $forumid, $COURSE->id, false, MUST_EXIST);
+                $forumid, $COURSE->id, false);
+            // prevent case where when we export/import course old forum not exist
+            if ($cm === false){
+                continue;
+            }
             $totalpoststoshow = $sliderconfig->siteitemstoshow;
             $tempdiscussions = forum_get_discussions($cm, "", true,
                 null, $totalpoststoshow, null, null,
@@ -76,7 +79,6 @@ function news_forum_slider_get_course_news($course, $getsitenews, $sliderconfig 
     }
 
     // If getsitenews is set to true, get site news instead.
-
     $strftimerecent = get_string('strftimerecent');
 
     // If this is a site page, do not pin course posts.
