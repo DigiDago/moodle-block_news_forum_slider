@@ -1,13 +1,18 @@
-.slider-banner-col {
+.news-slider .slider-banner-col {
     border-bottom: 1px solid #ccc;
     margin-bottom: 20px;
 }
 
-#slider-container {
+.news-slider #slider-container {
     max-width: 1250px;
     margin: auto;
 }
 
-.flex-grow-1 {
+.news-slider .flex-grow-1 {
     width: 100%;
+}
+
+.news-slider div.avatar {
+    margin-right: auto;
+    margin-left: auto;
 }

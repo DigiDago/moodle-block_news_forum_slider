@@ -403,15 +403,23 @@ class block_news_forum_slider extends block_base {
             $shortnewsmessage = '<a href="' . $newslink . '">' . $shortnewsmessage . ' </a>';
 
             // Shortname check.  If course announcement, add as link to course.
-            $courseshortname = "Site Announcement";
+            $courseshortname = "";
             if ($course->id != $SITE->id) {
                 $courselink = new moodle_url('/course/view.php', array('id' => $course->id));
                 $courseshortname = '<a href="' . $courselink . '" title="View ' . $course->shortname . '">';
                 $courseshortname .= '<strong> ' . $course->shortname . '</strong></a>';
             }
 
+            $author = '';
+
+            if($courseshortname){
+              $author .= ', ';
+            }
+
+            $author .= get_string("by", $this->blockname)  . ' ' . $news['author'];
+
             $returnedcoursenews[] = array('headline' => $headline,
-                'author' => ', ' . get_string("by", $this->blockname)  . ' ' . $news['author'],
+                'author' => $author,
                 'courseshortname' => $courseshortname,
                 'message' => $newsmessage,
                 'shortmessage' => $shortnewsmessage,
