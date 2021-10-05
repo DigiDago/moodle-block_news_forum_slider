@@ -93,7 +93,7 @@ function news_forum_slider_get_course_news($course, $getsitenews, $sliderconfig 
 
             // Build an object that represents the posting user.
             $postuser = new stdClass;
-            $postuserfields = explode(',', user_picture::fields());
+            $postuserfields = \core_user\fields::for_userpic()->get_required_fields();
             $postuser = username_load_fields_from_object($postuser, $discussion, null, $postuserfields);
             $postuser->id = $discussion->userid;
             $postuser->fullname = $discussion->firstname . ' ' . $discussion->lastname;
